@@ -8,7 +8,7 @@ import ProductMasonry from "../components/ProductMasonry";
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-white font-['Inter'] text-gray-800">
+    <div className="min-h-screen bg-white font-['Inter'] text-gray-800 overflow-x-hidden">
       {/* replace hero image with masonry product cards */}
       <ProductMasonry />
 

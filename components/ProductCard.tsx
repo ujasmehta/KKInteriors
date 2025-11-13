@@ -19,7 +19,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <motion.article
       layout
-      className="inline-block w-full mb-0.5 rounded-md overflow-hidden bg-white shadow-sm border-2"
+      // changed inline-block -> block to remove inline whitespace overflow
+      className="w-full mb-0.5 block rounded-md overflow-hidden bg-white shadow-sm border-2"
       style={
         {
           breakInside: "avoid",
@@ -48,13 +49,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
           src={image}
           alt={title}
           loading="lazy"
-          // start grayscale, remove on hover/tap — works on touch via whileTap
+          // ensure image is block and constrained to container
+          style={{
+            display: "block",
+            width: "100%",
+            height: "auto",
+            willChange: "filter, transform",
+          }}
+          // grayscale behaviour kept
           initial={{ filter: "grayscale(1)" }}
           whileHover={{ filter: "grayscale(0)" }}
           whileTap={{ filter: "grayscale(0)" }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="w-full h-auto object-cover block transition-[filter] duration-300 ease-out"
-          style={{ willChange: "filter, transform" }}
+          className="object-cover block"
         />
       </div>
 

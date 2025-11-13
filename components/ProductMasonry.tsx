@@ -53,8 +53,7 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
       .then((data: Product[]) => {
         if (!mounted) return;
         const list = Array.isArray(data) ? data : [];
-        const shuffled = shuffle(list);
-        setProducts(limit ? shuffled.slice(0, limit) : shuffled);
+        setProducts(limit ? list.slice(0, limit) : list);
       })
       .catch(() => {
         setProducts([]);
@@ -64,15 +63,20 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     };
   }, [limit]);
 
-  // keep horizontal and vertical gap consistent by using the same value
-  const gap = 2; // px — adjust if you want more space
+  const gap = 2; // pixels for both horizontal and vertical gap
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-8">
+    // full-bleed section
+    <section className="w-full px-0 py-8">
       <motion.div variants={containerVariants} initial="hidden" animate="show">
         <div
           className="columns-1 sm:columns-2 md:columns-3 lg:columns-4"
-          style={{ columnGap: gap, perspective: 1200 }}
+          style={{
+            columnGap: gap,
+            perspective: 1200,
+            width: "100%",
+            overflow: "hidden",
+          }}
         >
           {products.map((p) => (
             <motion.div
@@ -92,7 +96,7 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
                 {
                   breakInside: "avoid",
                   WebkitColumnBreakInside: "avoid",
-                  marginBottom: gap, // use same gap as columnGap
+                  marginBottom: gap, // same as columnGap
                   transformStyle: "preserve-3d",
                 } as any
               }
@@ -107,6 +111,11 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
           ))}
         </div>
       </motion.div>
+
+      {/* optional inner centered area for headings / descriptions */}
+      <div className="max-w-6xl mx-auto px-4 mt-6">
+        {/* e.g. title/CTA centered here when needed */}
+      </div>
     </section>
   );
 }
