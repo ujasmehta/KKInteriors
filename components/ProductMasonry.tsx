@@ -64,12 +64,15 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     };
   }, [limit]);
 
+  // keep horizontal and vertical gap consistent by using the same value
+  const gap = 2; // px — adjust if you want more space
+
   return (
     <section className="max-w-6xl mx-auto px-4 py-8">
       <motion.div variants={containerVariants} initial="hidden" animate="show">
         <div
           className="columns-1 sm:columns-2 md:columns-3 lg:columns-4"
-          style={{ columnGap: 16, perspective: 1200 }}
+          style={{ columnGap: gap, perspective: 1200 }}
         >
           {products.map((p) => (
             <motion.div
@@ -84,12 +87,12 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
               }}
               whileTap={{ scale: 0.995 }}
               transition={{ type: "spring", stiffness: 280, damping: 24 }}
-              className="group" // enables group-hover styles inside ProductCard
+              className="group"
               style={
                 {
                   breakInside: "avoid",
                   WebkitColumnBreakInside: "avoid",
-                  marginBottom: 16,
+                  marginBottom: gap, // use same gap as columnGap
                   transformStyle: "preserve-3d",
                 } as any
               }

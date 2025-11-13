@@ -10,12 +10,23 @@ interface ProductCardProps {
   description?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ title, image, price, description }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  title,
+  image,
+  price,
+  description,
+}) => {
   return (
     <motion.article
       layout
-      className="inline-block w-full mb-4 rounded-md overflow-hidden bg-white shadow-sm group"
-      style={{ breakInside: "avoid" }}
+      className="inline-block w-full mb-4 rounded-md overflow-hidden bg-white shadow-sm border-2 group"
+      style={
+        {
+          breakInside: "avoid",
+          // slightly stronger dark border
+          borderColor: "rgba(16,24,40,0.14)",
+        } as React.CSSProperties
+      }
     >
       <div className="w-full">
         <img
@@ -29,9 +40,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ title, image, price, descript
 
       <div className="p-3">
         <h3 className="text-sm font-medium font-heading">{title}</h3>
-        {description ? <p className="mt-1 text-xs text-primary/70">{description}</p> : null}
+        {description ? (
+          <p className="mt-1 text-xs text-primary/70">{description}</p>
+        ) : null}
         {typeof price === "number" ? (
-          <div className="mt-2 text-sm font-semibold">₹ {price.toLocaleString()}</div>
+          <div className="mt-2 text-sm font-semibold">
+            ₹ {price.toLocaleString()}
+          </div>
         ) : null}
       </div>
     </motion.article>
