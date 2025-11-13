@@ -34,13 +34,10 @@ export default function RootLayout({
       <body
         className={`${cormorant.variable} ${inter.variable} ${manrope.variable} antialiased min-h-screen flex flex-col`}
       >
-      
         <Header />
 
-       
         <main className="flex-grow">{children}</main>
 
-       
         <Footer />
       </body>
     </html>

@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Heart } from "lucide-react";
-import { redirect } from "next/navigation";
 
 const WaveAccent = () => (
   <svg
@@ -40,14 +39,12 @@ const productDetails = {
   },
 };
 
-export default function Page() {
-  // legacy /product links -> one-page product section
-  redirect("/#product");
+export default function ProductDetail() {
   const accentColor = "#B8946E";
   const buttonColor = "#E9C099";
 
   return (
-    <div className="min-h-screen bg-white font-['Inter'] text-gray-800">
+    <section id="product" className="bg-white font-['Inter'] text-gray-800">
       <header className="max-w-6xl mx-auto px-4 pt-8 sm:pt-12 flex justify-between items-start">
         <h1 className="text-sm text-gray-700 font-medium">
           {productDetails.name}{" "}
@@ -60,7 +57,7 @@ export default function Page() {
         />
       </header>
 
-      <section className="max-w-6xl mx-auto px-4 mt-8 sm:mt-12 grid md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto px-4 mt-8 sm:mt-12 grid md:grid-cols-2 gap-10">
         <div className="flex flex-col items-center md:items-start">
           <div className="w-full aspect-[16/10] border border-gray-200 rounded-sm overflow-hidden shadow-md">
             <img
@@ -96,15 +93,14 @@ export default function Page() {
             />
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="max-w-6xl mx-auto px-4 mt-16 sm:mt-24 grid md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto px-4 mt-16 sm:mt-24 grid md:grid-cols-2 gap-10">
         <div>
           <h2 className="text-xl font-medium uppercase text-gray-800 mb-2">
             PRODUCT INFO
           </h2>
           <WaveAccent />
-
           <p className="mt-6 text-sm text-gray-600 leading-relaxed max-w-sm">
             {productDetails.description}
           </p>
@@ -161,14 +157,13 @@ export default function Page() {
             </button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="max-w-6xl mx-auto px-4 pt-20 sm:pt-32 pb-16">
+      <div className="max-w-6xl mx-auto px-4 pt-20 sm:pt-32 pb-16">
         <h2 className="text-xl font-medium uppercase text-gray-800 mb-2">
           PRODUCTS THIS CAN PAIR WITH
         </h2>
         <WaveAccent />
-
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[1, 2, 3].map((num) => (
             <div
@@ -181,7 +176,7 @@ export default function Page() {
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
