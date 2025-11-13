@@ -10,7 +10,7 @@ type Product = {
   title: string;
   price?: number;
   description?: string;
-  images: string[]; // use first image
+  images: string[];
 };
 
 function shuffle<T>(arr: T[]) {
@@ -67,10 +67,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
   return (
     <section className="max-w-6xl mx-auto px-4 py-8">
       <motion.div variants={containerVariants} initial="hidden" animate="show">
-        {/* CSS columns for masonry; use column-gap via style for predictable gap */}
         <div
           className="columns-1 sm:columns-2 md:columns-3 lg:columns-4"
-          style={{ columnGap: 16 }}
+          style={{ columnGap: 16, perspective: 1200 }}
         >
           {products.map((p) => (
             <motion.div
@@ -85,8 +84,8 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
               }}
               whileTap={{ scale: 0.995 }}
               transition={{ type: "spring", stiffness: 280, damping: 24 }}
+              className="group" // enables group-hover styles inside ProductCard
               style={
-                // cast to any to allow vendor-prefixed CSS in TS without type errors
                 {
                   breakInside: "avoid",
                   WebkitColumnBreakInside: "avoid",
