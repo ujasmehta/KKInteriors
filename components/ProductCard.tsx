@@ -19,21 +19,41 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <motion.article
       layout
-      className="inline-block w-full mb-4 rounded-md overflow-hidden bg-white shadow-sm border-2 group"
+      className="inline-block w-full mb-4 rounded-md overflow-hidden bg-white shadow-sm border-2"
       style={
         {
           breakInside: "avoid",
-          // slightly stronger dark border
           borderColor: "rgba(16,24,40,0.14)",
         } as React.CSSProperties
       }
+      // same visual effect for hover (desktop) and tap (mobile)
+      whileHover={{
+        y: -6,
+        rotate: -1,
+        scale: 1.02,
+        boxShadow: "0 12px 30px rgba(16,24,40,0.08)",
+      }}
+      whileTap={{
+        y: -3,
+        rotate: -0.5,
+        scale: 0.995,
+        boxShadow: "0 8px 18px rgba(16,24,40,0.08)",
+      }}
+      transition={{ type: "spring", stiffness: 280, damping: 24 }}
+      role="button"
+      tabIndex={0}
     >
       <div className="w-full">
-        <img
+        <motion.img
           src={image}
           alt={title}
           loading="lazy"
-          className="w-full h-auto object-cover block filter grayscale group-hover:grayscale-0 hover:grayscale-0 transition duration-300 ease-out"
+          // start grayscale, remove on hover/tap — works on touch via whileTap
+          initial={{ filter: "grayscale(1)" }}
+          whileHover={{ filter: "grayscale(0)" }}
+          whileTap={{ filter: "grayscale(0)" }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="w-full h-auto object-cover block transition-[filter] duration-300 ease-out"
           style={{ willChange: "filter, transform" }}
         />
       </div>
