@@ -19,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <motion.article
       layout
-      className="inline-block w-full mb-4 rounded-md overflow-hidden bg-white shadow-sm border-2"
+      className="inline-block w-full mb-0.5 rounded-md overflow-hidden bg-white shadow-sm border-2"
       style={
         {
           breakInside: "avoid",
