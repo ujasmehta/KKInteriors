@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Heart } from "lucide-react";
-import { redirect } from "next/navigation";
 
 const WaveAccent = () => (
   <svg
@@ -32,22 +31,20 @@ const productDetails = {
     { label: "MATERIAL", value: "Oak Wood, Velvet Fabric" },
   ],
   images: {
-    main: "/products/color-1.png",
-    sketch: "/products/bw-1.png",
-    detail1: "/products/color-3.png",
-    detail2: "/products/color-2.png",
-    sideView: "/products/bw-2.png",
+    main: "/products/main.png",
+    sketch: "/products/sketch.png",
+    detail1: "/products/detail1.png",
+    detail2: "/products/detail2.png",
+    sideView: "/products/side-view.png",
   },
 };
 
-export default function Page() {
-  // legacy /product links -> one-page product section
-  redirect("/#product");
+export default function ProductDetail() {
   const accentColor = "#B8946E";
   const buttonColor = "#E9C099";
 
   return (
-    <div className="min-h-screen bg-white font-['Inter'] text-gray-800">
+    <section id="product" className="bg-white font-['Inter'] text-gray-800">
       <header className="max-w-6xl mx-auto px-4 pt-8 sm:pt-12 flex justify-between items-start">
         <h1 className="text-sm text-gray-700 font-medium">
           {productDetails.name}{" "}
@@ -60,7 +57,7 @@ export default function Page() {
         />
       </header>
 
-      <section className="max-w-6xl mx-auto px-4 mt-8 sm:mt-12 grid md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto px-4 mt-8 sm:mt-12 grid md:grid-cols-2 gap-10">
         <div className="flex flex-col items-center md:items-start">
           <div className="w-full aspect-[16/10] border border-gray-200 rounded-sm overflow-hidden shadow-md">
             <img
@@ -96,15 +93,14 @@ export default function Page() {
             />
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="max-w-6xl mx-auto px-4 mt-16 sm:mt-24 grid md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto px-4 mt-16 sm:mt-24 grid md:grid-cols-2 gap-10">
         <div>
           <h2 className="text-xl font-medium uppercase text-gray-800 mb-2">
             PRODUCT INFO
           </h2>
           <WaveAccent />
-
           <p className="mt-6 text-sm text-gray-600 leading-relaxed max-w-sm">
             {productDetails.description}
           </p>
@@ -129,7 +125,7 @@ export default function Page() {
             <img
               src={productDetails.images.detail1}
               alt="Detail 1"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-cover"
             />
           </div>
 
@@ -150,27 +146,24 @@ export default function Page() {
           </div>
 
           <div className="col-span-2 mt-4">
-            <div className="col-span-2 mt-4">
-             <button
-  className="px-8 py-3 ml-105 text-sm font-semibold tracking-wider text-black rounded-full shadow-md transition duration-300 w-full md:w-auto hover:bg-[#D5AD3C] hover:scale-105 cursor-pointer"
-  style={{
-    border: `1px solid ${accentColor}`,
-  }}
->
-  INQUIRE
-</button>
-
-            </div>
+            <button
+              className="px-8 py-3 ml-105 text-sm font-semibold tracking-wider text-white rounded-full shadow-md transition duration-300 w-full md:w-auto"
+              style={{
+                backgroundColor: buttonColor,
+                border: `1px solid ${accentColor}`,
+              }}
+            >
+              INQUIRE
+            </button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="max-w-6xl mx-auto px-4 pt-20 sm:pt-32 pb-16">
+      <div className="max-w-6xl mx-auto px-4 pt-20 sm:pt-32 pb-16">
         <h2 className="text-xl font-medium uppercase text-gray-800 mb-2">
           PRODUCTS THIS CAN PAIR WITH
         </h2>
         <WaveAccent />
-
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[1, 2, 3].map((num) => (
             <div
@@ -183,7 +176,7 @@ export default function Page() {
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

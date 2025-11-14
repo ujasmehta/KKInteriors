@@ -3,9 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-
   --color-bg: #faf8f4;
   --color-text: #2b2b2b;
   --color-accent: #d6a46d;
@@ -27,17 +25,27 @@
     line-height: 1.6;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-cormorant);
     font-weight: 600;
     letter-spacing: -0.01em;
   }
 
-  p, span, a, button {
+  p,
+  span,
+  a,
+  button {
     font-family: var(--font-inter);
   }
 
-  small, label, caption {
+  small,
+  label,
+  caption {
     font-family: var(--font-manrope);
     font-size: 0.875rem;
   }
@@ -50,4 +58,18 @@
   a:hover {
     color: var(--color-highlight);
   }
+}
+
+/* ensure predictable box-sizing and prevent horizontal scroll */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* prevent unexpected horizontal overflow on small screens */
+html,
+body,
+#__next {
+  overflow-x: hidden;
 }
