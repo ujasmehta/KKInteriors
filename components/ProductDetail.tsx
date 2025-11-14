@@ -31,11 +31,11 @@ const productDetails = {
     { label: "MATERIAL", value: "Oak Wood, Velvet Fabric" },
   ],
   images: {
-    main: "/products/main.png",
-    sketch: "/products/sketch.png",
-    detail1: "/products/detail1.png",
-    detail2: "/products/detail2.png",
-    sideView: "/products/side-view.png",
+    main: "/main.png",
+    sketch: "/sketch.png",
+    detail1: "/placeholder.png",
+    detail2: "/detail2.png",
+    sideView: "/side-view.png",
   },
 };
 
@@ -125,7 +125,7 @@ export default function ProductDetail() {
             <img
               src={productDetails.images.detail1}
               alt="Detail 1"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
 
@@ -141,20 +141,51 @@ export default function ProductDetail() {
             <img
               src={productDetails.images.sideView}
               alt="Side View"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
 
           <div className="col-span-2 mt-4">
-            <button
-              className="px-8 py-3 ml-105 text-sm font-semibold tracking-wider text-white rounded-full shadow-md transition duration-300 w-full md:w-auto"
-              style={{
-                backgroundColor: buttonColor,
-                border: `1px solid ${accentColor}`,
-              }}
-            >
-              INQUIRE
-            </button>
+           <button
+  className="
+    relative
+    px-8 py-3 
+    ml-105
+    text-sm font-semibold tracking-wider 
+    text-white 
+    rounded-full 
+    shadow-md 
+    transition-all duration-300 
+    w-full md:w-auto 
+    cursor-pointer 
+    overflow-hidden
+    hover:shadow-lg
+    hover:-translate-y-1
+  "
+  style={{
+    backgroundColor: buttonColor,
+    border: `1px solid ${accentColor}`,
+  }}
+>
+  <span
+    className="transition-all duration-300 group-hover:text-black"
+  >
+    INQUIRE
+  </span>
+
+  {/* Glow on hover */}
+  <span
+    className="
+      absolute inset-0 
+      opacity-0 
+      bg-gradient-to-r from-[#d18a42]/20 to-[#D5AD3C]/40
+      blur-xl rounded-full 
+      transition-opacity duration-300 
+      hover:opacity-100
+    "
+  />
+</button>
+
           </div>
         </div>
       </div>

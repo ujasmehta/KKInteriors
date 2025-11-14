@@ -2,9 +2,10 @@
 
 import React from "react";
 import { ChevronRight } from "lucide-react";
-import Hero from "../components/Hero";
-import ProductDetail from "../components/ProductDetail";
-import ProductMasonry from "../components/ProductMasonry";
+import Hero from "@/components/Hero";
+import ProductDetail from "@/components/ProductDetail";
+import ProductMasonry from "@/components/ProductMasonry";
+import ContactUs from "@/components/ContactUs";
 
 const Page = () => {
   return (
@@ -39,6 +40,9 @@ const Page = () => {
 
       <Hero />
       <ProductDetail />
+
+      <ContactUs />
+
     </div>
   );
 };

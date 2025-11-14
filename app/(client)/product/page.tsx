@@ -151,10 +151,26 @@ export default function Page() {
 
           <div className="col-span-2 mt-4">
             <div className="col-span-2 mt-4">
-             <button
-  className="px-8 py-3 ml-105 text-sm font-semibold tracking-wider text-black rounded-full shadow-md transition duration-300 w-full md:w-auto hover:bg-[#D5AD3C] hover:scale-105 cursor-pointer"
+            <button
+  className="
+    px-8 py-3 ml-105 text-sm font-semibold tracking-wider 
+    !text-black rounded-full shadow-md w-full md:w-auto 
+    transition-all duration-300 cursor-pointer
+    hover:scale-105 hover:shadow-lg
+    !border
+  "
   style={{
     border: `1px solid ${accentColor}`,
+    transition: "all 0.3s ease",
+    backgroundColor: "transparent",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.backgroundColor = accentColor;
+    e.currentTarget.style.color = "white";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.backgroundColor = "transparent";
+    e.currentTarget.style.color = "black";
   }}
 >
   INQUIRE

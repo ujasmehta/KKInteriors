@@ -1,15 +1,17 @@
+"use client";
 
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+
+const Header = () => {
   return (
     <header className="w-full bg-white">
-      {/* top accent — full bleed */}
       <div className="h-3 bg-[#d18a42]" />
 
-      {/* full-width row with no left/right container padding */}
-      <div className="flex items-center justify-between py-4 px-0 w-full">
+      <div className="flex items-center justify-between py-4 px-6 w-full max-w-7xl mx-auto">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo.png"
@@ -28,14 +30,16 @@ import Link from "next/link";
           >
             Products
           </Link>
+
           <Link
             href="/about"
             className="text-black hover:text-[#d18a42] transition-colors duration-300"
           >
             About Us
           </Link>
+
           <Link
-            href="/contact"
+            href="#contact"
             className="text-black hover:text-[#d18a42] transition-colors duration-300"
           >
             Contact Us
@@ -48,7 +52,7 @@ import Link from "next/link";
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-4 h-4 text-black hover:text-[#d18a42] transition-colors duration-300"
+              className="w-4 h-4 text-black hover:text-[#d18a42] transition-colors duration-300 mr-4 -ml-2"
             >
               <path
                 strokeLinecap="round"
@@ -56,12 +60,18 @@ import Link from "next/link";
                 d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z"
               />
             </svg>
-            <Link
-              href="/login"
-              className="text-black hover:text-[#d18a42] transition-colors duration-300"
-            >
-              Login
-            </Link>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="text-black hover:text-[#d18a42] transition-colors duration-300 cursor-pointer uppercase ">
+                  Login
+                </button>
+              </SignInButton>
+            </SignedOut>
+
+            <SignedIn>
+              <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+            </SignedIn>
           </div>
         </nav>
       </div>

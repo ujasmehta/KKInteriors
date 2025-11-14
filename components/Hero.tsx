@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 
 const container: Variants = {
   hidden: { opacity: 0 },
@@ -80,17 +81,28 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
+      
+
         <motion.div className="hidden lg:block" variants={item}>
           <motion.div
-            className="w-full h-72 bg-secondary rounded-lg border border-border flex items-center justify-center overflow-hidden"
+            
+            className="w-full h-72 bg-secondary rounded-lg border border-border flex items-center justify-center overflow-hidden relative" 
             variants={imageVariants}
             initial="hidden"
             animate="show"
             whileHover="hover"
           >
-            <span className="text-primary/50">Hero image</span>
+            <Image
+              src="/main.png" 
+              alt="Modern craft curated furniture" 
+              fill 
+              style={{ objectFit: "cover" }} 
+              priority 
+            />
           </motion.div>
         </motion.div>
+
+
       </motion.div>
     </section>
   );
