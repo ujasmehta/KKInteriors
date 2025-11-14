@@ -1,29 +1,27 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link"; 
+import Link from "next/link";
 
 const Header = () => {
   return (
     <header className="w-full bg-white">
-      
+      {/* top accent — full bleed */}
       <div className="h-3 bg-[#d18a42]" />
 
-     
-      <div className="flex items-center justify-between py-4 px-8">
-       
-        <Link href="/" className="flex flex-col items-center">
+      {/* full-width row with no left/right container padding */}
+      <div className="flex items-center justify-between py-4 px-0 w-full">
+        <Link href="/" className="flex items-center">
           <Image
             src="/logo.png"
             alt="Kashth Kala Logo"
-            width={220} 
-            height={120}
+            width={180}
+            height={56}
             className="object-contain cursor-pointer hover:opacity-90 transition-opacity"
             priority
           />
         </Link>
 
-       
-        <nav className="relative flex items-center space-x-8 text-sm uppercase mb-10">
+        <nav className="flex items-center space-x-6 text-sm uppercase">
           <Link
             href="/product"
             className="text-black hover:text-[#d18a42] transition-colors duration-300"
@@ -43,7 +41,6 @@ const Header = () => {
             Contact Us
           </Link>
 
-         
           <div className="flex items-center space-x-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -66,9 +63,6 @@ const Header = () => {
               Login
             </Link>
           </div>
-
-        
-          <div className="absolute -bottom-7 -left-180 right-5 border-t-2 border-[#d18a42]" />
         </nav>
       </div>
     </header>
