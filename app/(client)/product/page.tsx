@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Heart } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const WaveAccent = () => (
   <svg
@@ -41,10 +41,12 @@ const productDetails = {
 };
 
 export default function Page() {
-  // legacy /product links -> one-page product section
-  redirect("/#product");
+  const router = useRouter();
   const accentColor = "#B8946E";
-  const buttonColor = "#E9C099";
+
+  useEffect(() => {
+    router.push("/#product");
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-white font-['Inter'] text-gray-800">
@@ -116,7 +118,7 @@ export default function Page() {
             <ul className="space-y-1">
               {productDetails.specs.map((spec, index) => (
                 <li key={index} className="text-xs text-gray-700">
-                  <span className="font-medium mr-2">{spec.label}:</span>{" "}
+                  <span className="font-medium mr-2">{spec.label}:</span>
                   {spec.value}
                 </li>
               ))}
@@ -132,7 +134,6 @@ export default function Page() {
               className="w-full h-full object-contain"
             />
           </div>
-
           <div className="col-span-1 row-span-2 h-full border border-gray-200 rounded-sm overflow-hidden">
             <img
               src={productDetails.images.detail2}
@@ -140,7 +141,6 @@ export default function Page() {
               className="w-full h-full object-cover"
             />
           </div>
-
           <div className="col-span-1 h-40 sm:h-52 border border-gray-200 rounded-sm overflow-hidden">
             <img
               src={productDetails.images.sideView}
@@ -148,56 +148,6 @@ export default function Page() {
               className="w-full h-full object-cover"
             />
           </div>
-
-          <div className="col-span-2 mt-4">
-            <div className="col-span-2 mt-4">
-            <button
-  className="
-    px-8 py-3 ml-105 text-sm font-semibold tracking-wider 
-    !text-black rounded-full shadow-md w-full md:w-auto 
-    transition-all duration-300 cursor-pointer
-    hover:scale-105 hover:shadow-lg
-    !border
-  "
-  style={{
-    border: `1px solid ${accentColor}`,
-    transition: "all 0.3s ease",
-    backgroundColor: "transparent",
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.backgroundColor = accentColor;
-    e.currentTarget.style.color = "white";
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.backgroundColor = "transparent";
-    e.currentTarget.style.color = "black";
-  }}
->
-  INQUIRE
-</button>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="max-w-6xl mx-auto px-4 pt-20 sm:pt-32 pb-16">
-        <h2 className="text-xl font-medium uppercase text-gray-800 mb-2">
-          PRODUCTS THIS CAN PAIR WITH
-        </h2>
-        <WaveAccent />
-
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {[1, 2, 3].map((num) => (
-            <div
-              key={num}
-              className="w-full h-64 border border-gray-300 rounded-sm bg-gray-50 flex items-center justify-center hover:shadow-lg transition-shadow"
-            >
-              <span className="text-gray-400 text-lg">
-                Product {num} Placeholder
-              </span>
-            </div>
-          ))}
         </div>
       </section>
     </div>

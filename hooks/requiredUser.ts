@@ -1,10 +1,10 @@
-import { currentUser } from "@clerk/nextjs/server"
-import { redirect } from "next/dist/server/api-utils";
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation"; 
 
-
-export const requiredUser= async ()=>{
-  const user =await  currentUser();
-  if(!user){
-    redirect("/");
+export const requiredUser = async () => {
+  const user = await currentUser();
+  if (!user) {
+    redirect("/"); 
   }
+  return user;
 };

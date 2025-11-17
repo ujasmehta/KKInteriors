@@ -22,7 +22,11 @@ const item: Variants = {
   },
 };
 
-const ContactUs = ({ onSuccess }: any) => {
+interface ContactUsProps {
+  onSuccess?: () => void;
+}
+
+const ContactUs: React.FC<ContactUsProps> = ({ onSuccess }) => {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -32,34 +36,33 @@ const ContactUs = ({ onSuccess }: any) => {
 
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-  
-  const { error } = await supabase.from("contact").insert([form]);
-  if (error) {
-    toast.error("Failed to send message!");
+    const { error } = await supabase.from("contact").insert([form]);
+    if (error) {
+      toast.error("Failed to send message!");
+      setLoading(false);
+      return;
+    }
+
+    await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    toast.success("Message sent successfully!");
+    setForm({ name: "", email: "", phone: "", message: "" });
     setLoading(false);
-    return;
-  }
 
-  await fetch("/api/contact", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(form),
-});
-
-  toast.success("Message sent successfully!");
-  setForm({ name: "", email: "", phone: "", message: "" });
-  setLoading(false);
-
-  if (onSuccess) onSuccess();
-};
+    if (onSuccess) onSuccess();
+  };
 
   return (
     <motion.form

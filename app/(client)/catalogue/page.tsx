@@ -9,15 +9,7 @@ interface Piece {
 }
 
 export default async function Catalogue() {
-  // Fetch 5 pieces from Sanity
-  const query = `*[_type == "piece"][0...5]{
-    _id,
-    title,
-    description,
-    image,
-    price
-  }`;
-
+  const query = `*[_type == "piece"][0...5]{_id, title, description, image, price}`;
   const pieces: Piece[] = await sanityClient.fetch(query);
 
   return (
