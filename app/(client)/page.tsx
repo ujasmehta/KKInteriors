@@ -6,14 +6,17 @@ import Hero from "@/components/Hero";
 import ProductDetail from "@/components/ProductDetail";
 import ProductMasonry from "@/components/ProductMasonry";
 import ContactUs from "@/components/ContactUs";
+import ContactPage from "./contact/page";
 
 const Page = () => {
   return (
     <div className="min-h-screen bg-white font-['Inter'] text-gray-800 overflow-x-hidden">
-      {/* replace hero image with masonry product cards */}
       <ProductMasonry />
 
-      <main className="max-w-4xl mx-auto px-4 py-16 sm:py-24">
+      <main
+        id="about-section"
+        className="max-w-4xl mx-auto px-4 py-16 sm:py-24"
+      >
         <h2 className="text-3xl sm:text-4xl font-poppins text-black tracking-widest text-center mb-10 sm:mb-16 uppercase">
           ABOUT US
         </h2>
@@ -41,8 +44,7 @@ const Page = () => {
       <Hero />
       <ProductDetail />
 
-      <ContactUs />
-
+      <ContactPage />
     </div>
   );
 };

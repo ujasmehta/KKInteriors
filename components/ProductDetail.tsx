@@ -44,7 +44,7 @@ export default function ProductDetail() {
   const buttonColor = "#E9C099";
 
   return (
-    <section id="product" className="bg-white font-['Inter'] text-gray-800">
+    <section id="product-section" className="bg-white font-['Inter'] text-gray-800">
       <header className="max-w-6xl mx-auto px-4 pt-8 sm:pt-12 flex justify-between items-start">
         <h1 className="text-sm text-gray-700 font-medium">
           {productDetails.name}{" "}
@@ -146,46 +146,19 @@ export default function ProductDetail() {
           </div>
 
           <div className="col-span-2 mt-4">
-           <button
-  className="
-    relative
-    px-8 py-3 
-    ml-105
-    text-sm font-semibold tracking-wider 
-    text-white 
-    rounded-full 
-    shadow-md 
-    transition-all duration-300 
-    w-full md:w-auto 
-    cursor-pointer 
-    overflow-hidden
-    hover:shadow-lg
-    hover:-translate-y-1
-  "
-  style={{
-    backgroundColor: buttonColor,
-    border: `1px solid ${accentColor}`,
-  }}
->
-  <span
-    className="transition-all duration-300 group-hover:text-black"
-  >
-    INQUIRE
-  </span>
+            <button
+              className="relative px-8 py-3 ml-105 text-sm font-semibold tracking-wider text-white rounded-full shadow-md transition-all duration-300 w-full md:w-auto cursor-pointer overflow-hidden hover:shadow-lg hover:-translate-y-1"
+              style={{
+                backgroundColor: buttonColor,
+                border: `1px solid ${accentColor}`,
+              }}
+            >
+              <span className="transition-all duration-300 group-hover:text-black">
+                INQUIRE
+              </span>
 
-  {/* Glow on hover */}
-  <span
-    className="
-      absolute inset-0 
-      opacity-0 
-      bg-gradient-to-r from-[#d18a42]/20 to-[#D5AD3C]/40
-      blur-xl rounded-full 
-      transition-opacity duration-300 
-      hover:opacity-100
-    "
-  />
-</button>
-
+              <span className="absolute inset-0 opacity-0 bg-gradient-to-r from-[#d18a42]/20 to-[#D5AD3C]/40 blur-xl rounded-full transition-opacity duration-300 hover:opacity-100" />
+            </button>
           </div>
         </div>
       </div>

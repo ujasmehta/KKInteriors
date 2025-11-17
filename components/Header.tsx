@@ -24,26 +24,26 @@ const Header = () => {
         </Link>
 
         <nav className="flex items-center space-x-6 text-sm uppercase">
-          <Link
-            href="/product"
+          <a
+            href="#product-section"
             className="text-black hover:text-[#d18a42] transition-colors duration-300"
           >
             Products
-          </Link>
+          </a>
 
-          <Link
-            href="/about"
+          <a
+            href="#about-section"
             className="text-black hover:text-[#d18a42] transition-colors duration-300"
           >
             About Us
-          </Link>
+          </a>
 
-          <Link
-            href="#contact"
+          <a
+            href="#contact-section"
             className="text-black hover:text-[#d18a42] transition-colors duration-300"
           >
             Contact Us
-          </Link>
+          </a>
 
           <div className="flex items-center space-x-2">
             <svg
