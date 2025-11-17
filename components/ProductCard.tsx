@@ -19,62 +19,42 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <motion.article
       layout
-      // changed inline-block -> block to remove inline whitespace overflow
-      className="w-full mb-0.5 block rounded-md overflow-hidden bg-white shadow-sm border-2"
-      style={
-        {
-          breakInside: "avoid",
-          borderColor: "rgba(16,24,40,0.14)",
-        } as React.CSSProperties
-      }
-      // same visual effect for hover (desktop) and tap (mobile)
+      className="w-full block rounded-md overflow-hidden bg-white border border-gray-200"
+      style={{ breakInside: "avoid" }}
       whileHover={{
-        y: -6,
-        rotate: -1,
-        scale: 1.02,
-        boxShadow: "0 12px 30px rgba(16,24,40,0.08)",
+        scale: 1.03,
+        y: -4,
+        boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
       }}
-      whileTap={{
-        y: -3,
-        rotate: -0.5,
-        scale: 0.995,
-        boxShadow: "0 8px 18px rgba(16,24,40,0.08)",
-      }}
-      transition={{ type: "spring", stiffness: 280, damping: 24 }}
-      role="button"
-      tabIndex={0}
+      transition={{ type: "spring", stiffness: 200, damping: 18 }}
     >
-      <div className="w-full">
+      {/* Small compact aspect ratio */}
+      <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100">
         <motion.img
           src={image}
           alt={title}
           loading="lazy"
-          // ensure image is block and constrained to container
-          style={{
-            display: "block",
-            width: "100%",
-            height: "auto",
-            willChange: "filter, transform",
-          }}
-          // grayscale behaviour kept
+          className="w-full h-full object-cover"
           initial={{ filter: "grayscale(1)" }}
           whileHover={{ filter: "grayscale(0)" }}
-          whileTap={{ filter: "grayscale(0)" }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="object-cover block"
+          transition={{ duration: 0.25 }}
         />
       </div>
 
-      <div className="p-3">
-        <h3 className="text-sm font-medium font-heading">{title}</h3>
-        {description ? (
-          <p className="mt-1 text-xs text-primary/70">{description}</p>
-        ) : null}
-        {typeof price === "number" ? (
-          <div className="mt-2 text-sm font-semibold">
+      <div className="p-2">
+        <h3 className="text-sm font-semibold">{title}</h3>
+
+        {description && (
+          <p className="mt-1 text-xs text-gray-500 line-clamp-2">
+            {description}
+          </p>
+        )}
+
+        {typeof price === "number" && (
+          <div className="mt-1 text-sm font-bold text-gray-900">
             ₹ {price.toLocaleString()}
           </div>
-        ) : null}
+        )}
       </div>
     </motion.article>
   );

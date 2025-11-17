@@ -36,11 +36,10 @@ const ContactUs = ({ onSuccess }: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
 
-  
   const { error } = await supabase.from("contact").insert([form]);
   if (error) {
     toast.error("Failed to send message!");
@@ -49,10 +48,10 @@ const handleSubmit = async (e) => {
   }
 
   await fetch("/api/contact", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(form),
-});
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(form),
+  });
 
   toast.success("Message sent successfully!");
   setForm({ name: "", email: "", phone: "", message: "" });
@@ -60,6 +59,7 @@ const handleSubmit = async (e) => {
 
   if (onSuccess) onSuccess();
 };
+
 
   return (
     <motion.form

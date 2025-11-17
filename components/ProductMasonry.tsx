@@ -3,24 +3,15 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { motion, Variants } from "framer-motion";
+import { sanityClient, urlFor } from "@/lib/sanity";
 
 type Product = {
-  id: number;
-  slug?: string;
+  id: string;
   title: string;
   price?: number;
   description?: string;
   images: string[];
 };
-
-function shuffle<T>(arr: T[]) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -48,31 +39,55 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
 
   useEffect(() => {
     let mounted = true;
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then((data: Product[]) => {
-        if (!mounted) return;
-        const list = Array.isArray(data) ? data : [];
-        setProducts(limit ? list.slice(0, limit) : list);
-      })
-      .catch(() => {
-        setProducts([]);
-      });
+
+    async function loadProducts() {
+      const query = `*[_type == "piece"]{
+        _id,
+        title,
+        description,
+        price,
+        image
+      }`;
+
+      const data = await sanityClient.fetch(query);
+
+      const formatted: Product[] = data.map((doc: any) => ({
+        id: doc._id,
+        title: doc.title,
+        price: doc.price,
+        description: doc.description,
+        images: [
+          urlFor(doc.image)
+            .width(1000)
+            .height(1300)
+            .fit("crop")
+            .auto("format")
+            .quality(90)
+            .url(),
+        ],
+      }));
+
+      if (mounted) {
+        setProducts(limit ? formatted.slice(0, limit) : formatted);
+      }
+    }
+
+    loadProducts();
     return () => {
       mounted = false;
     };
   }, [limit]);
 
-  const gap = 2; // pixels for both horizontal and vertical gap
+  const gap = 10;
 
   return (
-    // full-bleed section
     <section className="w-full px-0 py-8">
       <motion.div variants={containerVariants} initial="hidden" animate="show">
         <div
           className="columns-1 sm:columns-2 md:columns-3 lg:columns-4"
           style={{
             columnGap: gap,
+            columnWidth: "180px",
             perspective: 1200,
             width: "100%",
             overflow: "hidden",
@@ -89,21 +104,16 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
                 scale: 1.02,
                 boxShadow: "0 12px 30px rgba(16,24,40,0.08)",
               }}
-              whileTap={{ scale: 0.995 }}
-              transition={{ type: "spring", stiffness: 280, damping: 24 }}
               className="group"
-              style={
-                {
-                  breakInside: "avoid",
-                  WebkitColumnBreakInside: "avoid",
-                  marginBottom: gap, // same as columnGap
-                  transformStyle: "preserve-3d",
-                } as any
-              }
+              style={{
+                breakInside: "avoid",
+                marginBottom: gap,
+                transformStyle: "preserve-3d",
+              }}
             >
               <ProductCard
                 title={p.title}
-                image={(p.images && p.images[0]) || "/placeholder.png"}
+                image={p.images[0]}
                 price={p.price}
                 description={p.description}
               />
@@ -111,11 +121,6 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
           ))}
         </div>
       </motion.div>
-
-      {/* optional inner centered area for headings / descriptions */}
-      <div className="max-w-6xl mx-auto px-4 mt-6">
-        {/* e.g. title/CTA centered here when needed */}
-      </div>
     </section>
   );
 }
