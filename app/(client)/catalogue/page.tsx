@@ -1,4 +1,10 @@
-import { sanityClient, urlFor } from "@/lib/sanity";
+"use client";
+
+import { useState, useEffect } from "react";
+import { sanityClient } from "@/lib/sanity";
+import Filters from "@/components/Filters";
+import ProductsGrid from "@/components/ProductGrid";
+import Pagination from "@/components/Pagination";
 
 interface Piece {
   _id: string;
@@ -6,37 +12,83 @@ interface Piece {
   description: string;
   image: any;
   price: number;
+  category?: { title: string };
+  collection?: { title: string };
 }
 
-export default async function Catalogue() {
-  // Fetch 5 pieces from Sanity
-  const query = `*[_type == "piece"][0...5]{
-    _id,
-    title,
-    description,
-    image,
-    price
-  }`;
+export default function Catalogue() {
+  const [pieces, setPieces] = useState<Piece[]>([]);
+  const [filteredPieces, setFilteredPieces] = useState<Piece[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [collections, setCollections] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCollection, setSelectedCollection] = useState("");
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
-  const pieces: Piece[] = await sanityClient.fetch(query);
+  useEffect(() => {
+    const fetchPieces = async () => {
+      const query = `*[_type == "piece"]{
+        _id,
+        title,
+        description,
+        image,
+        price,
+        category->{title},
+        collection->{title}
+      }`;
+      const data: Piece[] = await sanityClient.fetch(query);
+      setPieces(data);
+      setFilteredPieces(data);
+
+      setCategories([...new Set(data.map((p) => p.category?.title).filter(Boolean))] as string[]);
+      setCollections([...new Set(data.map((p) => p.collection?.title).filter(Boolean))] as string[]);
+    };
+    fetchPieces();
+  }, []);
+
+  useEffect(() => {
+    let updated = [...pieces];
+    if (selectedCategory) updated = updated.filter((p) => p.category?.title === selectedCategory);
+    if (selectedCollection) updated = updated.filter((p) => p.collection?.title === selectedCollection);
+    if (search) updated = updated.filter((p) =>
+      p.title.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredPieces(updated);
+    setCurrentPage(1);
+  }, [selectedCategory, selectedCollection, search, pieces]);
+
+  const totalPages = Math.ceil(filteredPieces.length / itemsPerPage);
+  const paginatedPieces = filteredPieces.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Catalogue</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pieces.map((piece) => (
-          <div key={piece._id} className="border p-4 rounded shadow">
-            <img
-              src={urlFor(piece.image).width(300).height(300).url()}
-              alt={piece.title}
-              className="mb-4"
-            />
-            <h2 className="text-xl font-semibold">{piece.title}</h2>
-            <p className="mb-2">{piece.description}</p>
-            <p className="font-bold">${piece.price}</p>
-          </div>
-        ))}
-      </div>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <h1 className="text-5xl font-bold mb-10 text-center text-gray-900 tracking-wide">
+        Catalogue
+      </h1>
+
+      <Filters
+        categories={categories}
+        collections={collections}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedCollection={selectedCollection}
+        setSelectedCollection={setSelectedCollection}
+        search={search}
+        setSearch={setSearch}
+      />
+
+      <ProductsGrid pieces={paginatedPieces} />
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }
