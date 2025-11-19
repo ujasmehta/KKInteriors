@@ -19,43 +19,66 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <motion.article
       layout
-      className="w-full block rounded-md overflow-hidden bg-white border border-gray-200"
-      style={{ breakInside: "avoid" }}
+      
+      className="w-full mb-0 block rounded-none overflow-hidden bg-transparent shadow-none border-0"
+      style={
+        {
+          breakInside: "avoid",
+          borderColor: "rgba(16,24,40,0.14)",
+        } as React.CSSProperties
+      }
+      
       whileHover={{
-        scale: 1.03,
-        y: -4,
-        boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
+        y: -6,
+        rotate: -1,
+        scale: 1.02,
+        boxShadow: "0 12px 30px rgba(16,24,40,0.08)",
       }}
-      transition={{ type: "spring", stiffness: 200, damping: 18 }}
+      whileTap={{
+        y: -3,
+        rotate: -0.5,
+        scale: 0.995,
+        boxShadow: "0 8px 18px rgba(16,24,40,0.08)",
+      }}
+      transition={{ type: "spring", stiffness: 280, damping: 24 }}
+      role="button"
+      tabIndex={0}
     >
-      {/* Small compact aspect ratio */}
-      <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100">
+      <div className="w-full">
         <motion.img
           src={image}
           alt={title}
           loading="lazy"
-          className="w-full h-full object-cover"
+         
+          style={{
+            display: "block",
+            width: "100%",
+            height: "auto",
+            objectFit:"cover",
+            margin:"0 ",
+            willChange: "filter, transform",
+            border: "1px solid black",
+          }}
+          
           initial={{ filter: "grayscale(1)" }}
           whileHover={{ filter: "grayscale(0)" }}
-          transition={{ duration: 0.25 }}
+          whileTap={{ filter: "grayscale(0)" }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="object-cover block"
         />
       </div>
 
-      <div className="p-2">
-        <h3 className="text-sm font-semibold">{title}</h3>
-
-        {description && (
-          <p className="mt-1 text-xs text-gray-500 line-clamp-2">
-            {description}
-          </p>
-        )}
-
-        {typeof price === "number" && (
-          <div className="mt-1 text-sm font-bold text-gray-900">
+      {/* <div className="p-3">
+        <h3 className="text-sm font-medium font-heading">{title}</h3>
+        {description ? (
+          <p className="mt-1 text-xs text-primary/70">{description}</p>
+        ) : null}
+        {typeof price === "number" ? (
+          <div className="mt-2 text-sm font-semibold">
             ₹ {price.toLocaleString()}
           </div>
-        )}
-      </div>
+        ) : null}
+      </div> */}
     </motion.article>
   );
 };
