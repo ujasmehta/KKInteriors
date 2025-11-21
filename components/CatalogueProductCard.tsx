@@ -57,14 +57,17 @@ const CatalogueProductCard: React.FC<ProductCardProps> = ({
 
       <div className="p-4">
         <h2 className="text-lg font-semibold text-gray-900 mb-2">{title}</h2>
+
         {description && (
           <p className="text-gray-600 text-sm mb-2 line-clamp-3">
             {description}
           </p>
         )}
+
         {price !== undefined && (
           <p className="text-indigo-600 font-bold text-md mb-2">${price}</p>
         )}
+
         {collection && (
           <span className="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full">
             {collection}

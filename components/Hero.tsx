@@ -58,7 +58,19 @@ export default function Hero() {
             timelessness. Explore the collection or book a consultation.
           </motion.p>
 
+         
           <motion.div className="mt-8 flex flex-wrap gap-3" variants={item}>
+            
+            <motion.a
+              href="#contact"
+              className="px-5 py-3 rounded-md border border-border inline-block"
+              whileHover={{ y: -3, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.18 }}
+            >
+              Book Consultation
+            </motion.a>
+
             <motion.a
               href="#product"
               className="px-5 py-3 rounded-md bg-accent text-white inline-block"
@@ -69,39 +81,27 @@ export default function Hero() {
               Shop Collection
             </motion.a>
 
-            <motion.a
-              href="#contact"
-              className="px-5 py-3 rounded-md border border-border inline-block"
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.18 }}
-            >
-              Book Consultation
-            </motion.a>
           </motion.div>
         </motion.div>
 
-      
-
+       
         <motion.div className="hidden lg:block" variants={item}>
           <motion.div
-            
-            className="w-full h-72 bg-secondary rounded-lg border border-border flex items-center justify-center overflow-hidden relative" 
+            className="w-full h-72 bg-secondary rounded-lg border border-border flex items-center justify-center overflow-hidden relative"
             variants={imageVariants}
             initial="hidden"
             animate="show"
             whileHover="hover"
           >
             <Image
-              src="/main.png" 
-              alt="Modern craft curated furniture" 
-              fill 
-              style={{ objectFit: "cover" }} 
-              priority 
+              src="/main.png"
+              alt="Modern craft curated furniture"
+              fill
+              style={{ objectFit: "cover" }}
+              priority
             />
           </motion.div>
         </motion.div>
-
 
       </motion.div>
     </section>
