@@ -34,6 +34,14 @@ export default function InquiryDrawer({
   const onSubmit = async (data: InquiryFormData) => {
     setLoading(true);
     try {
+
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag("event", "generate_lead", {
+          event_label: `Inquiry for ${productTitle}`,
+          product: productTitle,
+        });
+      }
+
       const { error } = await supabase.from("inquiry").insert({
         ...data,
         product: productTitle,
@@ -63,7 +71,6 @@ export default function InquiryDrawer({
 
   return (
     <>
-     
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40"
@@ -71,13 +78,11 @@ export default function InquiryDrawer({
         ></div>
       )}
 
-    
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-50 
         transform transition-transform duration-300 ease-out
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
-       
         <div className="relative p-5 border-b">
           <h2 className="text-xl font-bold">Enquire About</h2>
           <p className="text-[15px] text-gray-700">{productTitle}</p>
@@ -90,7 +95,6 @@ export default function InquiryDrawer({
           </button>
         </div>
 
-       
         <div className="p-6">
           {success ? (
             <p className="text-green-600 text-lg font-semibold">
@@ -98,7 +102,6 @@ export default function InquiryDrawer({
             </p>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
               <input
                 type="text"
                 placeholder="Your Name"
@@ -130,7 +133,7 @@ export default function InquiryDrawer({
                 type="submit"
                 disabled={loading}
                 className="w-full bg-[#f3953d] text-white px-4 py-2 rounded-md 
-                hover:bg-[#edb171] transition-colors cursor-pointer"
+                  hover:bg-[#edb171] transition-colors cursor-pointer"
               >
                 {loading ? "Submitting..." : "Submit Inquiry"}
               </button>

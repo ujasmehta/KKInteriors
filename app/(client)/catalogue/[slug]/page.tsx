@@ -1,5 +1,9 @@
 "use client";
-
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { sanityClient, urlFor } from "@/lib/sanity";
@@ -52,9 +56,7 @@ export default function ProductDetail() {
               ? [
                   {
                     _type: "block",
-                    children: [
-                      { _type: "span", text: String(data.description) },
-                    ],
+                    children: [{ _type: "span", text: String(data.description) }],
                   },
                 ]
               : [];
@@ -63,6 +65,22 @@ export default function ProductDetail() {
             ...data,
             description: normalizedDescription,
           });
+
+         
+          if (typeof window !== "undefined" && window.gtag) {
+            window.gtag("event", "view_item", {
+              currency: "INR",
+              value: data.price || 0,
+              items: [
+                {
+                  item_id: data._id,
+                  item_name: data.title,
+                  item_category: data.category || "",
+                  item_brand: "KK Interiors",
+                },
+              ],
+            });
+          }
 
           if (data.category) {
             const relatedQuery = `*[_type == "piece" && category->title == $category && slug.current != $slug][0...4]{
@@ -119,14 +137,10 @@ export default function ProductDetail() {
 
             <div className="flex flex-wrap gap-2 text-sm text-gray-600 mb-6">
               {product.category && (
-                <span className="px-2 py-1 bg-gray-200 rounded">
-                  {product.category}
-                </span>
+                <span className="px-2 py-1 bg-gray-200 rounded">{product.category}</span>
               )}
               {product.collection && (
-                <span className="px-2 py-1 bg-gray-200 rounded">
-                  {product.collection}
-                </span>
+                <span className="px-2 py-1 bg-gray-200 rounded">{product.collection}</span>
               )}
             </div>
 
@@ -138,8 +152,7 @@ export default function ProductDetail() {
           <button
             onClick={() => setModalOpen(true)}
             className="mt-6 px-8 py-3 text-white font-semibold rounded-full shadow-md 
-                       transform transition-all duration-300 ease-in-out
-                       hover:shadow-xl hover:-translate-y-1 hover:scale-105 cursor-pointer"
+              transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 hover:scale-105 cursor-pointer"
             style={{ backgroundColor: "#E9C099", border: "1px solid #B8946E" }}
           >
             INQUIRE
@@ -186,9 +199,7 @@ export default function ProductDetail() {
                 )}
                 <div className="p-2">
                   <h3 className="text-sm font-semibold">{item.title}</h3>
-                  {item.price && (
-                    <p className="text-sm text-gray-700">₹{item.price}</p>
-                  )}
+                  {item.price && <p className="text-sm text-gray-700">₹{item.price}</p>}
                 </div>
               </a>
             ))}
