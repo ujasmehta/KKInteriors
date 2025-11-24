@@ -1,18 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { usePathname } from "next/navigation";
 import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const routeLabelMap: Record<string, string> = {
+    "/": "HOME",
+    "/catalogue": "CATALOGUE",
+    "/about": "ABOUT US",
+    "/contact": "CONTACT US",
+  };
+
+  const label = routeLabelMap[pathname] || "";
+
   return (
     <header className="w-full bg-white">
-      <div className="h-3 bg-[#d18a42]" />
+      {label && (
+        <div className="bg-[#d18a42] px-2 ">
+          <span className="text-gray-800 text-sm tracking-wide">{label}</span>
+        </div>
+      )}
 
       <div className="flex items-center justify-between py-4 px-6 w-full max-w-7xl mx-auto">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center z-20">
           <Image
             src="/logo.png"
             alt="Kashth Kala Logo"
@@ -23,36 +39,62 @@ const Header = () => {
           />
         </Link>
 
-        <nav className="flex items-center space-x-6 text-sm uppercase">
-          <a
-            href="#product-section"
-            className="text-black hover:text-[#d18a42] transition-colors duration-300"
-          >
-            Products
-          </a>
-
-          <a
-            href="#about-section"
-            className="text-black hover:text-[#d18a42] transition-colors duration-300"
-          >
-            About Us
-          </a>
-
-          <a
-            href="#contact-section"
-            className="text-black hover:text-[#d18a42] transition-colors duration-300"
-          >
-            Contact Us
-          </a>
-
-          <div className="flex items-center space-x-2">
+        <button
+          className="md:hidden z-20"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-4 h-4 text-black hover:text-[#d18a42] transition-colors duration-300 mr-4 -ml-2"
+              className="w-7 h-7"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-7 h-7"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
+        </button>
+
+        <nav className="hidden md:flex items-center space-x-6 text-sm uppercase">
+          <a href="#product-section" className="hover:text-[#d18a42]">
+            Products
+          </a>
+          <a href="#about-section" className="hover:text-[#d18a42]">
+            About Us
+          </a>
+          <a href="#contact-section" className="hover:text-[#d18a42]">
+            Contact Us
+          </a>
+
+          <div className="flex items-center space-x-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5 hover:text-[#d18a42]"
             >
               <path
                 strokeLinecap="round"
@@ -63,7 +105,7 @@ const Header = () => {
 
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="text-black hover:text-[#d18a42] transition-colors duration-300 cursor-pointer uppercase ">
+                <button className="hover:text-[#d18a42] uppercase">
                   Login
                 </button>
               </SignInButton>
@@ -75,6 +117,8 @@ const Header = () => {
           </div>
         </nav>
       </div>
+
+      <div className="h-[1px] w-full bg-[#d18a42]" />
     </header>
   );
 };

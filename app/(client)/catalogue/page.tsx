@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { sanityClient, urlFor } from "@/lib/sanity";
+import { useState, useEffect, useRef } from "react";
+import { sanityClient } from "@/lib/sanity";
 import Filters from "@/components/Filters";
 import ProductsGrid from "@/components/ProductGrid";
 import Pagination from "@/components/Pagination";
+import { motion, useInView } from "framer-motion";
 
 interface Piece {
   _id: string;
   title: string;
-  slug: { current: string }; 
+  slug: { current: string };
   description: string;
   image: any;
   price: number;
@@ -28,6 +29,18 @@ export default function Catalogue() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 6;
+
+  // SCROLL ANIMATION REFS
+  const titleRef = useRef(null);
+  const filtersRef = useRef(null);
+  const productsRef = useRef(null);
+
+  const titleInView = useInView(titleRef, { once: true, margin: "-50px" });
+  const filtersInView = useInView(filtersRef, { once: true, margin: "-50px" });
+  const productsInView = useInView(productsRef, {
+    once: true,
+    margin: "-50px",
+  });
 
   useEffect(() => {
     const fetchPieces = async () => {
@@ -87,29 +100,48 @@ export default function Catalogue() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <h1 className="text-5xl font-bold mb-10 text-center text-gray-900 tracking-wide">
+    <div className="min-h-screen bg-gray-50 px-4 sm:px-8">
+      <motion.h1
+        ref={titleRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={titleInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="text-4xl sm:text-5xl font-bold mb-10 pt-10 text-center text-gray-900 tracking-wide"
+      >
         Catalogue
-      </h1>
+      </motion.h1>
 
-      <Filters
-        categories={categories}
-        collections={collections}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedCollection={selectedCollection}
-        setSelectedCollection={setSelectedCollection}
-        search={search}
-        setSearch={setSearch}
-      />
+      <motion.div
+        ref={filtersRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={filtersInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+      >
+        <Filters
+          categories={categories}
+          collections={collections}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedCollection={selectedCollection}
+          setSelectedCollection={setSelectedCollection}
+          search={search}
+          setSearch={setSearch}
+        />
+      </motion.div>
 
-      <ProductsGrid pieces={paginatedPieces} />
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
-      />
+      <motion.div
+        ref={productsRef}
+        initial={{ opacity: 0, y: 40 }}
+        animate={productsInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+      >
+        <ProductsGrid pieces={paginatedPieces} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </motion.div>
     </div>
   );
 }

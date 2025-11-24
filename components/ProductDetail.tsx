@@ -1,7 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
+import PairWithProducts from "./PairWithProducts";
+import { motion } from "framer-motion";
 
 const WaveAccent = () => (
   <svg
@@ -42,9 +44,36 @@ const productDetails = {
 export default function ProductDetail() {
   const accentColor = "#B8946E";
   const buttonColor = "#E9C099";
+  const [modalOpen, setModalOpen] = useState(false);
+  const [pairedProducts, setPairedProducts] = useState<any[]>([]);
+
+  const fetchPairedProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+
+      const filtered = data.filter(
+        (item: any) => item.title !== productDetails.name
+      );
+
+      const shuffled = filtered.sort(() => 0.5 - Math.random());
+      setPairedProducts(shuffled.slice(0, 6));
+    } catch (err) {
+      console.error("Failed to fetch paired products", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPairedProducts();
+    const interval = setInterval(fetchPairedProducts, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <section id="product-section" className="bg-white font-['Inter'] text-gray-800">
+    <section
+      id="product-section"
+      className="bg-white font-['Inter'] text-gray-800"
+    >
       <header className="max-w-6xl mx-auto px-4 pt-8 sm:pt-12 flex justify-between items-start">
         <h1 className="text-sm text-gray-700 font-medium">
           {productDetails.name}{" "}
@@ -147,40 +176,20 @@ export default function ProductDetail() {
 
           <div className="col-span-2 mt-4">
             <button
+              onClick={() => setModalOpen(true)}
               className="relative px-8 py-3 ml-105 text-sm font-semibold tracking-wider text-white rounded-full shadow-md transition-all duration-300 w-full md:w-auto cursor-pointer overflow-hidden hover:shadow-lg hover:-translate-y-1"
               style={{
                 backgroundColor: buttonColor,
                 border: `1px solid ${accentColor}`,
               }}
             >
-              <span className="transition-all duration-300 group-hover:text-black">
-                INQUIRE
-              </span>
-
-              <span className="absolute inset-0 opacity-0 bg-gradient-to-r from-[#d18a42]/20 to-[#D5AD3C]/40 blur-xl rounded-full transition-opacity duration-300 hover:opacity-100" />
+              INQUIRE
             </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 pt-20 sm:pt-32 pb-16">
-        <h2 className="text-xl font-medium uppercase text-gray-800 mb-2">
-          PRODUCTS THIS CAN PAIR WITH
-        </h2>
-        <WaveAccent />
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {[1, 2, 3].map((num) => (
-            <div
-              key={num}
-              className="w-full h-64 border border-gray-300 rounded-sm bg-gray-50 flex items-center justify-center hover:shadow-lg transition-shadow"
-            >
-              <span className="text-gray-400 text-lg">
-                Product {num} Placeholder
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <PairWithProducts products={pairedProducts} />
     </section>
   );
 }

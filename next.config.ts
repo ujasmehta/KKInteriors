@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
   },
+  images: {
+    domains: ["images.unsplash.com", "cdn.sanity.io"],
+  },
 };
 
 export default nextConfig;
