@@ -11,12 +11,23 @@ export const piece = defineType({
       type: "string",
     }),
     defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "title", maxLength: 96 },
+    }),
+    defineField({
       name: "image",
-      title: "Image",
+      title: "Main Image",
       type: "image",
-      options: {
-        hotspot: true,
-      },
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "gallery",
+      title: "Additional Images",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      description: "Add multiple images for the product",
     }),
     defineField({
       name: "description",
