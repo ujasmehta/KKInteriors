@@ -78,7 +78,6 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
               perspective: 1200,
               width: "100%",
               maxHeight: "calc(3 * 300px)",
-              
             }}
           >
             {products.map((p) => (
@@ -87,10 +86,8 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
                 variants={itemVariants}
                 layout
                 whileHover={{
-                  y: -6,
-                  rotate: -1,
-                  scale: 1.02,
-                  boxShadow: "0 12px 30px rgba(16,24,40,0.08)",
+                  scale: 1.16,
+                  boxShadow: "0 12px 30px rgba(16,24,40,0.10)",
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 24 }}
                 className="group"
