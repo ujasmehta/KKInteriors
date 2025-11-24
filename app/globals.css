@@ -60,16 +60,22 @@
   }
 }
 
-/* ensure predictable box-sizing and prevent horizontal scroll */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* prevent unexpected horizontal overflow on small screens */
 html,
 body,
 #__next {
   overflow-x: hidden;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
 }
