@@ -64,7 +64,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
   const gap = 0;
 
   return (
-    <section className="w-full px-0 py-0 overflow-x-auto no-scrollbar">
+    
+    <section className="w-full overflow-x-auto no-scrollbar">
+      
       <div className="min-w-max">
         <motion.div
           variants={containerVariants}
@@ -77,7 +79,8 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
               columnGap: gap,
               perspective: 1200,
               width: "100%",
-              maxHeight: "calc(3 * 300px)",
+              maxHeight: "calc(3 * 250px)",
+              
             }}
           >
             {products.map((p) => (
@@ -109,7 +112,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
             ))}
           </div>
         </motion.div>
+          
       </div>
+      
     </section>
   );
 }
