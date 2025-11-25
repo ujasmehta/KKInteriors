@@ -19,26 +19,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <motion.article
       layout
-      
       className="w-full mb-0 block rounded-none overflow-hidden bg-transparent shadow-none border-0"
       style={
         {
           breakInside: "avoid",
+          position:"relative",
+      
           borderColor: "rgba(16,24,40,0.14)",
         } as React.CSSProperties
       }
-      
       whileHover={{
-        y: -6,
-        rotate: -1,
-        scale: 1.02,
-        boxShadow: "0 12px 30px rgba(16,24,40,0.08)",
+        scale: 1.22,
+        y: -4,
+        boxShadow: "0 12px 30px rgba(16,24,40,0.12)",
       }}
       whileTap={{
-        y: -3,
-        rotate: -0.5,
-        scale: 0.995,
-        boxShadow: "0 8px 18px rgba(16,24,40,0.08)",
+        scale: 1.08,
+        y: -2,
+        boxShadow: "0 8px 18px rgba(16,24,40,0.10)",
       }}
       transition={{ type: "spring", stiffness: 280, damping: 24 }}
       role="button"
@@ -49,17 +47,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
           src={image}
           alt={title}
           loading="lazy"
-         
           style={{
             display: "block",
             width: "100%",
-            height: "auto",
-            objectFit:"cover",
-            margin:"0 ",
+            height: "204px",
+            objectFit: "contain",
+            margin: "0 ",
             willChange: "filter, transform",
             border: "1px solid black",
           }}
-          
           initial={{ filter: "grayscale(1)" }}
           whileHover={{ filter: "grayscale(0)" }}
           whileTap={{ filter: "grayscale(0)" }}
@@ -67,6 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           className="object-cover block"
         />
       </div>
+       
 
       {/* <div className="p-3">
         <h3 className="text-sm font-medium font-heading">{title}</h3>

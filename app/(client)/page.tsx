@@ -1,25 +1,16 @@
 "use client";
 
 import React from "react";
-import { ChevronRight } from "lucide-react";
-import Hero from "@/components/Hero";
-import ProductDetail from "@/components/ProductDetail";
 import ProductMasonry from "@/components/ProductMasonry";
-import ContactUs from "@/components/ContactUs";
-import ContactPage from "./contact/page";
-import AboutSection from "@/components/AboutSection";
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-white font-['Inter'] text-gray-800 overflow-x-hidden">
-      <ProductMasonry />
+    <div className="h-screen w-full bg-white font-['Inter'] text-gray-800 overflow-hidden flex flex-col">
+      <div className="w-full h-[2px] bg-orange-500" />
 
-      <AboutSection />
-
-      <Hero />
-      <ProductDetail />
-
-      <ContactPage />
+      <div className="flex-1 overflow-hidden gap-0 ">
+        <ProductMasonry />
+      </div>
     </div>
   );
 };
