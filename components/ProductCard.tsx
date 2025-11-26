@@ -51,7 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             display: "block",
             width: "100%",
             height: "204px",
-            objectFit: "contain",
+            objectFit: "fill",
             margin: "0 ",
             willChange: "filter, transform",
             border: "1px solid black",
