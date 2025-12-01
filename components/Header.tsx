@@ -77,15 +77,16 @@ const Header = () => {
         </button>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm uppercase">
-          <a href="#product-section" className="hover:text-[#d18a42]">
-            Products
-          </a>
-          <a href="#about-section" className="hover:text-[#d18a42]">
-            About Us
-          </a>
-          <a href="#contact-section" className="hover:text-[#d18a42]">
-            Contact Us
-          </a>
+          <Link href="/catalogue" className="hover:text-[#d18a42]">
+  Products
+</Link>
+         <Link href="/about" className="hover:text-[#d18a42]">
+  About Us
+</Link>
+
+         <Link href="/contact" className="hover:text-[#d18a42]">
+  Contact Us
+</Link>
 
           <div className="flex items-center space-x-3">
             <svg

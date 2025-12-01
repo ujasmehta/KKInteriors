@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface ProductCardProps {
   title: string;
@@ -43,25 +44,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
       tabIndex={0}
     >
       <div className="w-full">
-        <motion.img
-          src={image}
-          alt={title}
-          loading="lazy"
-          style={{
-            display: "block",
-            width: "100%",
-            height: "204px",
-            objectFit: "contain",
-            margin: "0 ",
-            willChange: "filter, transform",
-            border: "1px solid black",
-          }}
-          initial={{ filter: "grayscale(1)" }}
-          whileHover={{ filter: "grayscale(0)" }}
-          whileTap={{ filter: "grayscale(0)" }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="object-cover block"
-        />
+    <motion.div initial={{ filter: "grayscale(1)" }} whileHover={{ filter: "grayscale(0)" }}>
+  <Image
+    src={image}
+    alt={title}
+    width={400}
+    height={400}
+    loading="lazy"
+    className="w-full h-[204px] object-fill"
+  />
+</motion.div>
       </div>
        
 
