@@ -72,7 +72,7 @@ const ContactPage = () => {
 
           <div
             className="flex flex-col items-center cursor-pointer"
-            onClick={() => window.open("https://wa.me/91999999999")}
+            onClick={() => window.open("https://wa.me/+919979540446")}
           >
             <MessageCircle
               size={64}
