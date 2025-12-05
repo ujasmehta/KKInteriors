@@ -65,7 +65,7 @@ const CatalogueProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {price !== undefined && (
-          <p className="text-indigo-600 font-bold text-md mb-2">${price}</p>
+          <p className="text-[#d18a42] font-bold text-md mb-2">₹{price}</p>
         )}
 
         {collection && (

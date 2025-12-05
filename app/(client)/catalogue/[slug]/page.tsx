@@ -131,7 +131,7 @@ export default function ProductDetail() {
         <div className="flex-1 flex flex-col justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-            <p className="text-xl font-semibold text-gray-800 mb-4">
+            <p className="text-xl font-semibold text-[#d18a42] mb-4">
               {product.price ? `₹${product.price}` : "Price on request"}
             </p>
 

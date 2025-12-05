@@ -30,7 +30,6 @@ export default function Catalogue() {
 
   const itemsPerPage = 6;
 
-  // SCROLL ANIMATION REFS
   const titleRef = useRef(null);
   const filtersRef = useRef(null);
   const productsRef = useRef(null);
