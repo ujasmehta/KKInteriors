@@ -91,9 +91,14 @@ export default function Filters({
         className="w-64 bg-white border border-gray-300 rounded-md shadow-sm"
       />
 
-      <Button variant="outline" onClick={clearFilters}>
-        Clear Filters
-      </Button>
+      <Button
+  variant="outline"
+  onClick={clearFilters}
+  className="transition-all duration-300 border-gray-400 hover:bg-[#d18a42] hover:text-white hover:border-[#d18a42] hover:scale-105 active:scale-95 cursor-pointer"
+>
+  Clear Filters
+</Button>
+
     </div>
   );
 }

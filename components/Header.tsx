@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +9,11 @@ import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  // Prevent background scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+  }, [menuOpen]);
 
   const routeLabelMap: Record<string, string> = {
     "/": "HOME",
@@ -19,10 +24,16 @@ const Header = () => {
 
   const label = routeLabelMap[pathname] || "";
 
+  const navItems = [
+    { label: "Products", href: "/catalogue" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact Us", href: "/contact" },
+  ];
+
   return (
-    <header className="w-full bg-white">
+    <header className="w-full bg-white relative">
       {label && (
-        <div className="bg-[#d18a42] px-2 ">
+        <div className="bg-[#d18a42] px-2">
           <span className="text-gray-800 text-sm tracking-wide">{label}</span>
         </div>
       )}
@@ -39,85 +50,82 @@ const Header = () => {
           />
         </Link>
 
+        {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden z-20"
+          className="md:hidden z-30"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle Menu"
         >
           {menuOpen ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
+              className="w-7 h-7"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-7 h-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
             <svg
               xmlns="http://www.w3.org/2000/svg"
+              className="w-7 h-7"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-7 h-7"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           )}
         </button>
 
+        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 text-sm uppercase">
-          <Link href="/catalogue" className="hover:text-[#d18a42]">
-  Products
-</Link>
-         <Link href="/about" className="hover:text-[#d18a42]">
-  About Us
-</Link>
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} className="hover:text-[#d18a42]">
+              {item.label}
+            </Link>
+          ))}
 
-         <Link href="/contact" className="hover:text-[#d18a42]">
-  Contact Us
-</Link>
+          <SignedOut>
+            <SignInButton>
+              <button className="hover:text-[#d18a42] uppercase">Login</button>
+            </SignInButton>
+          </SignedOut>
 
-          <div className="flex items-center space-x-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5 hover:text-[#d18a42]"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z"
-              />
-            </svg>
-
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="hover:text-[#d18a42] uppercase">
-                  Login
-                </button>
-              </SignInButton>
-            </SignedOut>
-
-            <SignedIn>
-              <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
-            </SignedIn>
-          </div>
+          <SignedIn>
+            <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+          </SignedIn>
         </nav>
       </div>
+
+      {/* ///// Mobile Menu ///// */}
+      {menuOpen && (
+        <div className="absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center space-y-8 text-lg uppercase z-10 transition-all duration-300">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className="hover:text-[#d18a42]"
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          <SignedOut>
+            <SignInButton>
+              <button className="hover:text-[#d18a42] uppercase">Login</button>
+            </SignInButton>
+          </SignedOut>
+
+          <SignedIn>
+            <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+          </SignedIn>
+        </div>
+      )}
 
       <div className="h-[1px] w-full bg-[#d18a42]" />
     </header>
