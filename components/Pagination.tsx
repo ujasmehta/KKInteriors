@@ -11,7 +11,7 @@ interface PaginationProps {
 export default function Pagination({ currentPage, totalPages, setCurrentPage }: PaginationProps) {
   return (
     <div className="flex justify-center mt-10 gap-3">
-      <Button onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))} disabled={currentPage === 1}>
+      <Button onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))} disabled={currentPage === 1} className="cursor-pointer">
         Prev
       </Button>
 
@@ -25,7 +25,7 @@ export default function Pagination({ currentPage, totalPages, setCurrentPage }: 
         </Button>
       ))}
 
-      <Button onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))} disabled={currentPage === totalPages}>
+      <Button onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))} disabled={currentPage === totalPages} className="cursor-pointer">
         Next
       </Button>
     </div>
