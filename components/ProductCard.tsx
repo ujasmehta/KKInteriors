@@ -51,7 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     width={400}
     height={400}
     loading="lazy"
-    className="w-full h-[204px] object-fill"
+    className="w-[150px] h-[204px] object-fill"
   />
 </motion.div>
       </div>
