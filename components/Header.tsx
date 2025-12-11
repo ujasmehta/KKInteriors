@@ -10,7 +10,6 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Prevent background scroll when menu open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
   }, [menuOpen]);
@@ -18,6 +17,7 @@ const Header = () => {
   const routeLabelMap: Record<string, string> = {
     "/": "HOME",
     "/catalogue": "CATALOGUE",
+    "/explore": "EXPLORE",
     "/about": "ABOUT US",
     "/contact": "CONTACT US",
   };
@@ -38,7 +38,7 @@ const Header = () => {
         </div>
       )}
 
-      <div className="flex items-center justify-between py-4 px-6 w-full max-w-7xl mx-auto">
+      <div className="flex items-center justify-between py-4 px-6 w-full max-w-7xl mx-auto relative">
         <Link href="/" className="flex items-center z-20">
           <Image
             src="/logo.png"
@@ -50,41 +50,22 @@ const Header = () => {
           />
         </Link>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="md:hidden z-30"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle Menu"
-        >
-          {menuOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-7 h-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-7 h-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2">
+          <Link
+            href="/explore"
+            className="px-6 py-3 rounded-full bg-[#d18a42] text-white text-sm uppercase hover:bg-[#b67434] transition-all"
+          >
+            Explore
+          </Link>
+        </div>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 text-sm uppercase">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-[#d18a42]">
+            <Link
+              key={item.href}
+              href={item.href}
+              className="hover:text-[#d18a42]"
+            >
               {item.label}
             </Link>
           ))}
@@ -99,11 +80,54 @@ const Header = () => {
             <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
           </SignedIn>
         </nav>
+
+        <button
+          className="md:hidden z-30"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle Menu"
+        >
+          {menuOpen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-7 h-7"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-7 h-7"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
+        </button>
       </div>
 
-      {/* ///// Mobile Menu ///// */}
       {menuOpen && (
         <div className="absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center space-y-8 text-lg uppercase z-10 transition-all duration-300">
+          <Link
+            href="/explore"
+            onClick={() => setMenuOpen(false)}
+            className="px-8 py-4 rounded-full bg-[#d18a42] text-white text-lg hover:bg-[#b67434] transition-all"
+          >
+            Explore
+          </Link>
+
           {navItems.map((item) => (
             <Link
               key={item.href}

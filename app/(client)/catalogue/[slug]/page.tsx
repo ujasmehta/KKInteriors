@@ -18,7 +18,7 @@ interface Piece {
   gallery?: any[];
   category?: string;
   collection?: string;
-  price?: number;
+  // price?: number;
   slug: { current: string };
 }
 
@@ -131,9 +131,9 @@ export default function ProductDetail() {
         <div className="flex-1 flex flex-col justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-            <p className="text-xl font-semibold text-[#d18a42] mb-4">
+            {/* <p className="text-xl font-semibold text-[#d18a42] mb-4">
               {product.price ? `₹${product.price}` : "Price on request"}
-            </p>
+            </p> */}
 
             <div className="flex flex-wrap gap-2 text-sm text-gray-600 mb-6">
               {product.category && (
@@ -194,12 +194,12 @@ export default function ProductDetail() {
                   <img
                     src={urlFor(item.image).width(400).height(300).url()}
                     alt={item.title}
-                    className="w-full h-40 object-cover"
+                    className="w-full h-40 object-fill"
                   />
                 )}
                 <div className="p-2">
                   <h3 className="text-sm font-semibold">{item.title}</h3>
-                  {item.price && <p className="text-sm text-gray-700">₹{item.price}</p>}
+                  {/* {item.price && <p className="text-sm text-gray-700">₹{item.price}</p>} */}
                 </div>
               </a>
             ))}

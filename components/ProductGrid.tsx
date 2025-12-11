@@ -28,7 +28,7 @@ export default function ProductsGrid({ pieces }: ProductsGridProps) {
             key={piece._id}
             title={piece.title}
             image={urlFor(piece.image).width(400).height(300).url()}
-            price={piece.price}
+            // price={piece.price}
             description={piece.description}
           />
         </Link>

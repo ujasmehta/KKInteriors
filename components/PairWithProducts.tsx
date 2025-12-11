@@ -37,7 +37,7 @@ const PairWithProducts: React.FC<PairWithProductsProps> = ({ products }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % products.length);
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [products.length]);
@@ -67,7 +67,7 @@ const PairWithProducts: React.FC<PairWithProductsProps> = ({ products }) => {
               <img
                 src={product.images}
                 alt={product.title}
-                className="w-full h-full object-cover rounded-sm"
+                className="w-full h-full object-fill rounded-sm"
               />
             ) : (
               <span className="text-gray-400 text-lg">{product.title}</span>
