@@ -52,7 +52,7 @@ const Header = () => {
 
         <div className="hidden md:flex absolute left-1/2 -translate-x-1/2">
           <Link
-            href="/explore"
+            href="/catalogue"
             className="px-6 py-3 rounded-full bg-[#d18a42] text-white text-sm uppercase hover:bg-[#b67434] transition-all"
           >
             Explore
@@ -121,7 +121,7 @@ const Header = () => {
       {menuOpen && (
         <div className="absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center space-y-8 text-lg uppercase z-10 transition-all duration-300">
           <Link
-            href="/explore"
+            href="/catalogue"
             onClick={() => setMenuOpen(false)}
             className="px-8 py-4 rounded-full bg-[#d18a42] text-white text-lg hover:bg-[#b67434] transition-all"
           >
