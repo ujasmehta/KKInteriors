@@ -7,7 +7,7 @@ import { Mail, Smartphone, MapPin, MessageCircle } from "lucide-react";
 import ContactModal from "@/components/ContactModal";
 import ContactUs from "@/components/ContactUs";
 
-const accentColor = "#C6A16B";
+const accentColor = "#2F6B54";
 
 const primaryTextColor = "#2B3A5A";
 

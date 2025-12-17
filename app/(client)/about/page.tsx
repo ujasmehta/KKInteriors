@@ -25,7 +25,7 @@ export default function AboutSection() {
             WHO WE ARE
           </p>
           <h2 className="text-4xl sm:text-5xl font-poppins font-semibold text-gray-900 leading-tight">
-            Crafting Stories in <span className="text-[#C07B56]">Wood</span>,
+            Crafting Stories in <span className="text-[#2F6B54]">Wood</span>,
             <br />
             Culture & Detail
           </h2>
@@ -110,7 +110,7 @@ export default function AboutSection() {
                 href="https://www.instagram.com/kaashthkala?igsh=eXR3dzVodG14c3c0"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-10 py-4 text-sm font-medium rounded-full bg-gray-900 text-white hover:bg-[#C07B56] transition-all duration-300 shadow-lg"
+                className="inline-flex items-center gap-3 px-10 py-4 text-sm font-medium rounded-full bg-gray-900 text-white hover:bg-[#2F6B54] transition-all duration-300 shadow-lg"
               >
                 <FaInstagram className="text-lg" />
                 Follow our journey

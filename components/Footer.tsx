@@ -14,7 +14,7 @@ const Footer = () => {
   return (
     <footer className="w-full bg-white pt-12">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="h-px w-full bg-[#d18a42]" />
+        <div className="h-px w-full bg-[#2F6B54]" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pt-12 pb-20">
@@ -35,7 +35,7 @@ const Footer = () => {
               />
               <Button
                 type="submit"
-                className="h-10 px-5 rounded-full bg-[#d18a42] text-white text-sm hover:bg-[#b67434] transition-all"
+                className="h-10 px-5 rounded-full bg-[#2F6B54] text-white text-sm hover:bg-[#144130] transition-all"
               >
                 Sign up
               </Button>
@@ -53,7 +53,7 @@ const Footer = () => {
                     <li key={item}>
                       <a
                         href="#"
-                        className="hover:text-[#d18a42] transition-colors"
+                        className="hover:text-[#123527] transition-colors"
                       >
                         {item}
                       </a>

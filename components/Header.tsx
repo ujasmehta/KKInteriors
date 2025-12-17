@@ -33,10 +33,9 @@ const Header = () => {
   return (
     <header className="w-full bg-white relative">
       {label && (
-        <div className="bg-[#d18a42] px-2">
-          <span className="text-gray-800 text-sm tracking-wide">{label}</span>
-        </div>
-      )}
+  <div className="w-full h-[25px] bg-[#2F6B54]" />
+)}
+
 
       <div className="flex items-center justify-between py-4 px-6 w-full max-w-7xl mx-auto relative">
         <Link href="/" className="flex items-center z-20">
@@ -53,7 +52,7 @@ const Header = () => {
         <div className="hidden md:flex absolute left-1/2 -translate-x-1/2">
           <Link
             href="/catalogue"
-            className="px-6 py-3 rounded-full bg-[#d18a42] text-white text-sm uppercase hover:bg-[#b67434] transition-all"
+            className="px-6 py-3 rounded-full bg-[#2F6B54] text-white text-sm uppercase hover:bg-[#225743] transition-all"
           >
             Explore
           </Link>
@@ -64,7 +63,7 @@ const Header = () => {
             <Link
               key={item.href}
               href={item.href}
-              className="hover:text-[#d18a42]"
+              className="hover:text-[#1b4937]"
             >
               {item.label}
             </Link>
@@ -72,7 +71,7 @@ const Header = () => {
 
           <SignedOut>
             <SignInButton>
-              <button className="hover:text-[#d18a42] uppercase">Login</button>
+              <button className="hover:text-[#1b4937] uppercase">Login</button>
             </SignInButton>
           </SignedOut>
 
@@ -123,7 +122,7 @@ const Header = () => {
           <Link
             href="/catalogue"
             onClick={() => setMenuOpen(false)}
-            className="px-8 py-4 rounded-full bg-[#d18a42] text-white text-lg hover:bg-[#b67434] transition-all"
+            className="px-8 py-4 rounded-full bg-[#2F6B54] text-white text-lg hover:bg-[#1b4937] transition-all"
           >
             Explore
           </Link>
@@ -133,7 +132,7 @@ const Header = () => {
               key={item.href}
               href={item.href}
               onClick={() => setMenuOpen(false)}
-              className="hover:text-[#d18a42]"
+              className="hover:text-[#1b4937]"
             >
               {item.label}
             </Link>
@@ -141,7 +140,7 @@ const Header = () => {
 
           <SignedOut>
             <SignInButton>
-              <button className="hover:text-[#d18a42] uppercase">Login</button>
+              <button className="hover:text-[#1b4937] uppercase">Login</button>
             </SignInButton>
           </SignedOut>
 
@@ -151,7 +150,7 @@ const Header = () => {
         </div>
       )}
 
-      <div className="h-[1px] w-full bg-[#d18a42]" />
+      <div className="h-[1px] w-full bg-[#2F6B54]" />
     </header>
   );
 };

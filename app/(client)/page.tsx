@@ -19,8 +19,8 @@ const Page = () => {
         <ProductMasonry />
       </div>
 
-     <div className="w-full  bg-[#d18a42] px-4 py-1 text-center">
-  <span className="text-black text-sm tracking-wide">
+     <div className="w-full  bg-[#2F6B54] px-4 py-1 text-center">
+  <span className="text-white text-sm tracking-wide">
     © {new Date().getFullYear()} KK Interiors. All rights reserved.
   </span>
 </div>

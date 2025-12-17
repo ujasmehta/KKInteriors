@@ -153,7 +153,7 @@ export default function ProductDetail() {
             onClick={() => setModalOpen(true)}
             className="mt-6 px-8 py-3 text-white font-semibold rounded-full shadow-md 
               transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 hover:scale-105 cursor-pointer"
-            style={{ backgroundColor: "#E9C099", border: "1px solid #B8946E" }}
+            style={{ backgroundColor: "#2F6B54", border: "1px solid #B8946E" }}
           >
             INQUIRE
           </button>
