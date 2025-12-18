@@ -132,8 +132,8 @@ export default function InquiryDrawer({
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#f3953d] text-white px-4 py-2 rounded-md 
-                  hover:bg-[#edb171] transition-colors cursor-pointer"
+                className="w-full bg-[#2F6B54] text-white px-4 py-2 rounded-md 
+                  hover:bg-[#0a2219] transition-colors cursor-pointer"
               >
                 {loading ? "Submitting..." : "Submit Inquiry"}
               </button>
