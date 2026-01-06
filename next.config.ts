@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.sanity.io',
       },
     ],
-    unoptimized: true, // This disables Next.js image optimization
+    //unoptimized: true, // This disables Next.js image optimization
   },
 };
 
