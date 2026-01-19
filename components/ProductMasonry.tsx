@@ -6,21 +6,22 @@ import { motion, Variants } from "framer-motion";
 
 type GalleryItem = {
   id: string;
+  slug?:  string;
   title: string;
   description?: string;
-  images: string[];
+  images:  string[];
 };
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+const containerVariants:  Variants = {
+  hidden:  { opacity: 0 },
   show: {
-    opacity: 1,
+    opacity:  1,
     transition: { staggerChildren: 0.08, delayChildren: 0.06 },
   },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12, scale: 0.985 },
+const itemVariants:  Variants = {
+  hidden:  { opacity: 0, y:   12, scale: 0.985 },
   show: {
     opacity: 1,
     y: 0,
@@ -42,7 +43,14 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
       .then((r) => r.json())
       .then((data: GalleryItem[]) => {
         if (!mounted) return;
-        setItems(limit ? data.slice(0, limit) : data);
+        const list: Product[] = data.map((p) => ({
+          id: p._id,
+          title: p.  title,
+          description: p.  description,
+          price: p.  price,
+          images: p.  images ? [p.images] :   [],
+        }));
+        setProducts(limit ? list.slice(0, limit) : list);
       })
       .catch(() => setItems([]));
 
@@ -71,12 +79,15 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
         const rect = container.getBoundingClientRect();
         const edgeSize = 150;
 
-        if (mouseX > rect.right - edgeSize) {
-          container.scrollLeft +=
-            ((mouseX - (rect.right - edgeSize)) / edgeSize) * 15;
-        } else if (mouseX < rect.left + edgeSize) {
-          container.scrollLeft -=
-            ((rect.left + edgeSize - mouseX) / edgeSize) * 15;
+        // Scroll right
+        if (mouseX > rect. right - edgeSize) {
+          speed = ((mouseX - (rect.right - edgeSize)) / edgeSize) * 15;
+          container.scrollLeft += speed;
+        }
+        // Scroll left
+        else if (mouseX < rect.left + edgeSize) {
+          speed = ((rect.left + edgeSize - mouseX) / edgeSize) * 15;
+          container.scrollLeft -= speed;
         }
       }
 
@@ -90,8 +101,8 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      if (scrollRef.current.animationFrame) {
-        cancelAnimationFrame(scrollRef.current.animationFrame);
+      if (scrollRef.current. animationFrame) {
+        cancelAnimationFrame(scrollRef. current.animationFrame);
       }
     };
   }, []);
@@ -100,6 +111,7 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
 
   return (
     <section
+      className="w-full overflow-x-auto no-scrollbar overflow-y-visible"
       ref={containerRef}
       className="w-full overflow-x-auto no-scrollbar"
     >
@@ -110,9 +122,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
           animate="show"
         >
           <div
-            className="columns-4 sm:columns-6 md:columns-8 lg:columns-10 xl:columns-12"
+            className="columns-4 sm: columns-6 md:columns-8 lg:columns-10 xl:columns-12"
             style={{
-              columnGap: gap,
+              columnGap:  gap,
               perspective: 1200,
               width: "100%",
               maxHeight: "calc(3 * 250px)",
@@ -125,24 +137,28 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
                 layout
                 whileHover={{
                   scale: 1.16,
+                  zIndex: 50,
                   boxShadow: "0 12px 30px rgba(16,24,40,0.10)",
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 24 }}
-                className="group"
+                className="group relative"
                 style={{
                   breakInside: "avoid",
                   marginBottom: gap,
-                }}
+                  position: "relative",
+                  zIndex: 1,
+                } as React.CSSProperties}
               >
                 <ProductCard
-                  title={item.title}
-                  image={item.images[0]}
-                  description={item.description}
+                  title={p.title}
+                  image={(p. images && p.images[0]) || "/placeholder.png"}
+                  price={p.price}
+                  description={p.description}
                 />
-              </motion.div>
+              </motion. div>
             ))}
           </div>
-        </motion.div>
+        </motion. div>
       </div>
     </section>
   );
