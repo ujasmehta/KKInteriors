@@ -121,7 +121,7 @@ export default function ProductDetail() {
         <div className="flex-1 rounded-lg overflow-hidden shadow-lg">
           {product.image && (
             <img
-              src={urlFor(product.image).width(1200).height(800).url()}
+              src={urlFor(product.image).width(1200).url()}
               alt={product.title}
               className="w-full h-full object-cover transition-transform duration-300"
             />

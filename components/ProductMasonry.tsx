@@ -4,11 +4,10 @@ import React, { useEffect, useState, useRef } from "react";
 import ProductCard from "./ProductCard";
 import { motion, Variants } from "framer-motion";
 
-type Product = {
+type GalleryItem = {
   id: string;
   slug?:  string;
   title: string;
-  price?: number;
   description?: string;
   images:  string[];
 };
@@ -32,15 +31,17 @@ const itemVariants:  Variants = {
 };
 
 export default function ProductMasonry({ limit }: { limit?: number }) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<{ animationFrame?: number }>({});
 
+  // Fetch gallery
   useEffect(() => {
     let mounted = true;
-    fetch("/api/products")
+
+    fetch("/api/gallery")
       .then((r) => r.json())
-      .then((data: any[]) => {
+      .then((data: GalleryItem[]) => {
         if (!mounted) return;
         const list: Product[] = data.map((p) => ({
           id: p._id,
@@ -51,19 +52,19 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
         }));
         setProducts(limit ? list.slice(0, limit) : list);
       })
-      .catch(() => setProducts([]));
+      .catch(() => setItems([]));
 
     return () => {
       mounted = false;
     };
   }, [limit]);
 
-  // Smooth auto-scroll based on cursor position
+  // Mouse edge scroll
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    let mouseX = 0;
+    let mouseX = -1;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
@@ -74,11 +75,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     };
 
     const scroll = () => {
-      if (!container) return;
       if (mouseX >= 0) {
         const rect = container.getBoundingClientRect();
-        const edgeSize = 150; // px distance from edge
-        let speed = 0;
+        const edgeSize = 150;
 
         // Scroll right
         if (mouseX > rect. right - edgeSize) {
@@ -97,7 +96,6 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
 
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
-
     scrollRef.current.animationFrame = requestAnimationFrame(scroll);
 
     return () => {
@@ -115,9 +113,14 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     <section
       className="w-full overflow-x-auto no-scrollbar overflow-y-visible"
       ref={containerRef}
+      className="w-full overflow-x-auto no-scrollbar"
     >
       <div className="min-w-max">
-        <motion.div variants={containerVariants} initial="hidden" animate="show">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
           <div
             className="columns-4 sm: columns-6 md:columns-8 lg:columns-10 xl:columns-12"
             style={{
@@ -127,9 +130,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
               maxHeight: "calc(3 * 250px)",
             }}
           >
-            {products.map((p) => (
+            {items.map((item) => (
               <motion.div
-                key={p.id}
+                key={item.id}
                 variants={itemVariants}
                 layout
                 whileHover={{
@@ -141,7 +144,6 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
                 className="group relative"
                 style={{
                   breakInside: "avoid",
-                  WebkitColumnBreakInside: "avoid",
                   marginBottom: gap,
                   position: "relative",
                   zIndex: 1,

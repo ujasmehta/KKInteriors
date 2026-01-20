@@ -27,7 +27,7 @@ export default function ProductsGrid({ pieces }: ProductsGridProps) {
           <CatalogueProductCard
             key={piece._id}
             title={piece.title}
-            image={urlFor(piece.image).width(400).height(300).url()}
+            image={urlFor(piece.image).width(400).height(500).url()}
             // price={piece.price}
             description={piece.description}
           />
