@@ -6,22 +6,22 @@ import { motion, Variants } from "framer-motion";
 
 type GalleryItem = {
   id: string;
-  slug?:  string;
+  slug?: string;
   title: string;
   description?: string;
-  images:  string[];
+  images: string[];
 };
 
-const containerVariants:  Variants = {
-  hidden:  { opacity: 0 },
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
   show: {
-    opacity:  1,
+    opacity: 1,
     transition: { staggerChildren: 0.08, delayChildren: 0.06 },
   },
 };
 
-const itemVariants:  Variants = {
-  hidden:  { opacity: 0, y:   12, scale: 0.985 },
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 12, scale: 0.985 },
   show: {
     opacity: 1,
     y: 0,
@@ -43,14 +43,7 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
       .then((r) => r.json())
       .then((data: GalleryItem[]) => {
         if (!mounted) return;
-        const list: Product[] = data.map((p) => ({
-          id: p._id,
-          title: p.  title,
-          description: p.  description,
-          price: p.  price,
-          images: p.  images ? [p.images] :   [],
-        }));
-        setProducts(limit ? list.slice(0, limit) : list);
+        setItems(limit ? data.slice(0, limit) : data);
       })
       .catch(() => setItems([]));
 
@@ -78,9 +71,10 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
       if (mouseX >= 0) {
         const rect = container.getBoundingClientRect();
         const edgeSize = 150;
+        let speed = 0;
 
         // Scroll right
-        if (mouseX > rect. right - edgeSize) {
+        if (mouseX > rect.right - edgeSize) {
           speed = ((mouseX - (rect.right - edgeSize)) / edgeSize) * 15;
           container.scrollLeft += speed;
         }
@@ -101,8 +95,8 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      if (scrollRef.current. animationFrame) {
-        cancelAnimationFrame(scrollRef. current.animationFrame);
+      if (scrollRef.current.animationFrame) {
+        cancelAnimationFrame(scrollRef.current.animationFrame);
       }
     };
   }, []);
@@ -113,7 +107,6 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
     <section
       className="w-full overflow-x-auto no-scrollbar overflow-y-visible"
       ref={containerRef}
-      className="w-full overflow-x-auto no-scrollbar"
     >
       <div className="min-w-max">
         <motion.div
@@ -124,7 +117,7 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
           <div
             className="columns-4 sm: columns-6 md:columns-8 lg:columns-10 xl:columns-12"
             style={{
-              columnGap:  gap,
+              columnGap: gap,
               perspective: 1200,
               width: "100%",
               maxHeight: "calc(3 * 250px)",
@@ -142,23 +135,24 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 24 }}
                 className="group relative"
-                style={{
-                  breakInside: "avoid",
-                  marginBottom: gap,
-                  position: "relative",
-                  zIndex: 1,
-                } as React.CSSProperties}
+                style={
+                  {
+                    breakInside: "avoid",
+                    marginBottom: gap,
+                    position: "relative",
+                    zIndex: 1,
+                  } as React.CSSProperties
+                }
               >
                 <ProductCard
-                  title={p.title}
-                  image={(p. images && p.images[0]) || "/placeholder.png"}
-                  price={p.price}
-                  description={p.description}
+                  title={item.title}
+                  image={(item.images && item.images[0]) || "/placeholder.png"}
+                  description={item.description}
                 />
-              </motion. div>
+              </motion.div>
             ))}
           </div>
-        </motion. div>
+        </motion.div>
       </div>
     </section>
   );
