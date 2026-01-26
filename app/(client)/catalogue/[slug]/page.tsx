@@ -24,7 +24,7 @@ interface Piece {
 
 export default function ProductDetail() {
   const params = useParams();
-  const slug = params?.slug;
+  const slug = params?.slug as string;
   const [product, setProduct] = useState<Piece | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Piece[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,9 @@ export default function ProductDetail() {
     if (!slug) return;
 
     const fetchProduct = async () => {
-      const query = `*[_type == "piece" && slug.current == $slug][0]{
+      const query = `*[_type == "piece" &&
+  (slug.current == $slug || _id == $slug)][0]
+{
         _id,
         title,
         description,
@@ -170,9 +172,9 @@ export default function ProductDetail() {
                 className="flex-shrink-0 w-64 h-40 rounded-lg overflow-hidden shadow-sm cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:shadow-xl"
               >
                 <img
-                  src={urlFor(img).width(400).height(300).url()}
+                  src={urlFor(img).url()}
                   alt={`${product.title} - image ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-fill"
                 />
               </div>
             ))}
@@ -187,12 +189,13 @@ export default function ProductDetail() {
             {relatedProducts.map((item) => (
               <a
                 key={item._id}
-                href={`/catalogue/${item.slug.current}`}
+                href={`/catalogue/${item.slug?.current ?? item._id}`}
+
                 className="block rounded-lg overflow-hidden shadow-sm transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
               >
                 {item.image && (
                   <img
-                    src={urlFor(item.image).width(400).height(300).url()}
+                    src={urlFor(item.image).url()}
                     alt={item.title}
                     className="w-full h-40 object-fill"
                   />
