@@ -78,7 +78,6 @@ function GalleryModal({
           ✕
         </button>
 
-        {/* STRONGER ZOOM INSIDE MODAL */}
         <ZoomImage src={src} alt="Gallery zoom" zoomScale={3.5} />
       </div>
     </div>
@@ -151,7 +150,7 @@ export default function ProductDetail() {
         if (data.category) {
           const related = await sanityClient.fetch(
             `*[_type=="piece" && category->title==$category && slug.current!=$slug][0...4]{
-              _id,title,image,slug
+              _id, title, image, slug
             }`,
             { category: data.category, slug }
           );
@@ -200,7 +199,7 @@ export default function ProductDetail() {
       </div>
 
       {/* GALLERY */}
-      {product.gallery?.length > 0 && (
+      {product.gallery && product.gallery.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 py-8">
           <h2 className="text-2xl font-semibold mb-4">Gallery</h2>
           <div className="flex gap-4 overflow-x-auto">
