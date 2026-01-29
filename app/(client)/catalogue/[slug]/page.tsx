@@ -1,14 +1,90 @@
 "use client";
+
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
   }
 }
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { sanityClient, urlFor } from "@/lib/sanity";
 import InquiryModal from "@/components/InquiryModal";
 import { PortableText } from "@portabletext/react";
+
+/* ---------------- ZOOM IMAGE ---------------- */
+
+function ZoomImage({
+  src,
+  alt,
+  zoomScale = 3,
+}: {
+  src: string;
+  alt: string;
+  zoomScale?: number;
+}) {
+  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const [zoomed, setZoomed] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setPosition({ x, y });
+  };
+
+  return (
+    <div
+      className="w-full h-full overflow-hidden cursor-zoom-in"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setZoomed(true)}
+      onMouseLeave={() => setZoomed(false)}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-contain transition-transform duration-200 ease-out"
+        style={{
+          transformOrigin: `${position.x}% ${position.y}%`,
+          transform: zoomed ? `scale(${zoomScale})` : "scale(1)",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ---------------- GALLERY MODAL ---------------- */
+
+function GalleryModal({
+  src,
+  onClose,
+}: {
+  src: string;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-[90vw] h-[85vh] bg-black rounded-lg overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-50 text-white text-2xl font-bold"
+        >
+          ✕
+        </button>
+
+        <ZoomImage src={src} alt="Gallery zoom" zoomScale={3.5} />
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- TYPES ---------------- */
 
 interface Piece {
   _id: string;
@@ -18,196 +94,144 @@ interface Piece {
   gallery?: any[];
   category?: string;
   collection?: string;
-  // price?: number;
+  price?: number;
   slug: { current: string };
 }
+
+/* ---------------- PAGE ---------------- */
 
 export default function ProductDetail() {
   const params = useParams();
   const slug = params?.slug as string;
+
   const [product, setProduct] = useState<Piece | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Piece[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [activeGalleryImage, setActiveGalleryImage] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (!slug) return;
 
     const fetchProduct = async () => {
       const query = `*[_type == "piece" &&
-  (slug.current == $slug || _id == $slug)][0]
-{
-        _id,
-        title,
-        description,
-        image,
-        "category": category->title,
-        "collection": collection->title,
-        price,
-        slug,
-        gallery[]
-      }`;
+        (slug.current == $slug || _id == $slug)][0]{
+          _id,
+          title,
+          description,
+          image,
+          "category": category->title,
+          "collection": collection->title,
+          price,
+          slug,
+          gallery[]
+        }`;
 
-      try {
-        const data = await sanityClient.fetch(query, { slug });
+      const data = await sanityClient.fetch(query, { slug });
 
-        if (data) {
-          const normalizedDescription = Array.isArray(data.description)
-            ? data.description
-            : data.description
-              ? [
-                  {
-                    _type: "block",
-                    children: [{ _type: "span", text: String(data.description) }],
-                  },
-                ]
-              : [];
+      if (data) {
+        const normalizedDescription = Array.isArray(data.description)
+          ? data.description
+          : data.description
+          ? [
+              {
+                _type: "block",
+                children: [{ _type: "span", text: String(data.description) }],
+              },
+            ]
+          : [];
 
-          setProduct({
-            ...data,
-            description: normalizedDescription,
-          });
+        setProduct({ ...data, description: normalizedDescription });
 
-         
-          if (typeof window !== "undefined" && window.gtag) {
-            window.gtag("event", "view_item", {
-              currency: "INR",
-              value: data.price || 0,
-              items: [
-                {
-                  item_id: data._id,
-                  item_name: data.title,
-                  item_category: data.category || "",
-                  item_brand: "KK Interiors",
-                },
-              ],
-            });
-          }
-
-          if (data.category) {
-            const relatedQuery = `*[_type == "piece" && category->title == $category && slug.current != $slug][0...4]{
-              _id,
-              title,
-              image,
-              price,
-              slug
-            }`;
-            const related = await sanityClient.fetch(relatedQuery, {
-              category: data.category,
-              slug,
-            });
-            setRelatedProducts(related);
-          }
-        } else {
-          setProduct(null);
+        if (data.category) {
+          const related = await sanityClient.fetch(
+            `*[_type=="piece" && category->title==$category && slug.current!=$slug][0...4]{
+              _id, title, image, slug
+            }`,
+            { category: data.category, slug }
+          );
+          setRelatedProducts(related);
         }
-      } catch (err) {
-        console.error("Sanity fetch error:", err);
-        setProduct(null);
-      } finally {
-        setLoading(false);
       }
+
+      setLoading(false);
     };
 
     fetchProduct();
   }, [slug]);
 
-  if (!slug)
-    return <p className="p-10 text-red-500 text-center">Slug missing</p>;
   if (loading) return <p className="p-10 text-center">Loading...</p>;
   if (!product) return <p className="p-10 text-center">Product not found</p>;
 
   return (
-    <section className="bg-gray-50 font-['Inter'] text-gray-800 min-h-screen">
+    <section className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
+        {/* MAIN IMAGE */}
         <div className="flex-1 rounded-lg overflow-hidden shadow-lg">
           {product.image && (
-            <img
-              src={urlFor(product.image).width(1200).url()}
+            <ZoomImage
+              src={urlFor(product.image).width(1400).url()}
               alt={product.title}
-              className="w-full h-full object-cover transition-transform duration-300"
+              zoomScale={3}
             />
           )}
         </div>
 
+        {/* DETAILS */}
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-            {/* <p className="text-xl font-semibold text-[#d18a42] mb-4">
-              {product.price ? `₹${product.price}` : "Price on request"}
-            </p> */}
-
-            <div className="flex flex-wrap gap-2 text-sm text-gray-600 mb-6">
-              {product.category && (
-                <span className="px-2 py-1 bg-gray-200 rounded">{product.category}</span>
-              )}
-              {product.collection && (
-                <span className="px-2 py-1 bg-gray-200 rounded">{product.collection}</span>
-              )}
-            </div>
-
-            <div className="text-gray-700 leading-relaxed">
-              <PortableText value={product.description} />
-            </div>
+            <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
+            <PortableText value={product.description} />
           </div>
 
           <button
             onClick={() => setModalOpen(true)}
-            className="mt-6 px-8 py-3 text-white font-semibold rounded-full shadow-md 
-              transform transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 hover:scale-105 cursor-pointer"
-            style={{ backgroundColor: "#2F6B54", border: "1px solid #B8946E" }}
+            className="mt-6 px-8 py-3 text-white rounded-full"
+            style={{ backgroundColor: "#2F6B54" }}
           >
             INQUIRE
           </button>
         </div>
       </div>
 
+      {/* GALLERY */}
       {product.gallery && product.gallery.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 py-8">
           <h2 className="text-2xl font-semibold mb-4">Gallery</h2>
           <div className="flex gap-4 overflow-x-auto">
-            {product.gallery.map((img, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 w-64 h-40 rounded-lg overflow-hidden shadow-sm cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:shadow-xl"
-              >
-                <img
-                  src={urlFor(img).url()}
-                  alt={`${product.title} - image ${index + 1}`}
-                  className="w-full h-full object-fill"
-                />
-              </div>
-            ))}
+            {product.gallery.map((img, index) => {
+              const src = urlFor(img).width(600).url();
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setActiveGalleryImage(src);
+                    setGalleryOpen(true);
+                  }}
+                  className="flex-shrink-0 w-64 h-40 rounded-lg overflow-hidden shadow-md cursor-pointer hover:scale-105 transition"
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {relatedProducts.length > 0 && (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <h2 className="text-2xl font-semibold mb-4">Related Products</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {relatedProducts.map((item) => (
-              <a
-                key={item._id}
-                href={`/catalogue/${item.slug?.current ?? item._id}`}
-
-                className="block rounded-lg overflow-hidden shadow-sm transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
-              >
-                {item.image && (
-                  <img
-                    src={urlFor(item.image).url()}
-                    alt={item.title}
-                    className="w-full h-40 object-fill"
-                  />
-                )}
-                <div className="p-2">
-                  <h3 className="text-sm font-semibold">{item.title}</h3>
-                  {/* {item.price && <p className="text-sm text-gray-700">₹{item.price}</p>} */}
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
+      {/* GALLERY MODAL */}
+      {galleryOpen && activeGalleryImage && (
+        <GalleryModal
+          src={activeGalleryImage}
+          onClose={() => setGalleryOpen(false)}
+        />
       )}
 
       <InquiryModal
