@@ -1,20 +1,13 @@
 "use client";
 
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-  }
-}
-
-import { useEffect, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { sanityClient, urlFor } from "@/lib/sanity";
 import InquiryModal from "@/components/InquiryModal";
 import { PortableText } from "@portabletext/react";
 
-/* ---------------- ZOOM IMAGE ---------------- */
-
-function ZoomImage({
+/* ----------- HOVER-TO-ZOOM IMAGE COMPONENT ----------- */
+function HoverZoomImage({
   src,
   alt,
   zoomScale = 3,
@@ -23,30 +16,57 @@ function ZoomImage({
   alt: string;
   zoomScale?: number;
 }) {
-  const [position, setPosition] = useState({ x: 50, y: 50 });
   const [zoomed, setZoomed] = useState(false);
+  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  // Mouse cursor: move zoom focus point
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!zoomed) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setPosition({ x, y });
-  };
+  }
+
+  // On touch/click outside mobile zoom, close
+  useEffect(() => {
+    function handleTouch(event: TouchEvent) {
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(event.target as Node)) {
+        setZoomed(false);
+      }
+    }
+    if (zoomed) {
+      document.addEventListener("touchstart", handleTouch);
+    }
+    return () => {
+      document.removeEventListener("touchstart", handleTouch);
+    };
+  }, [zoomed]);
 
   return (
     <div
-      className="w-full h-full overflow-hidden cursor-zoom-in"
+      ref={containerRef}
+      className="w-full h-full relative overflow-hidden cursor-zoom-in select-none"
+      style={{ minHeight: 320, maxHeight: 560 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setZoomed(true)}
       onMouseLeave={() => setZoomed(false)}
+      onClick={() => setZoomed(z => !z)} // tap toggles on mobile/touch
     >
       <img
         src={src}
         alt={alt}
+        draggable={false}
         className="w-full h-full object-contain transition-transform duration-200 ease-out"
         style={{
           transformOrigin: `${position.x}% ${position.y}%`,
           transform: zoomed ? `scale(${zoomScale})` : "scale(1)",
+          cursor: zoomed ? "zoom-out" : "zoom-in",
+          touchAction: "none",
+          userSelect: "none",
+          background: "transparent",
         }}
       />
     </div>
@@ -68,8 +88,8 @@ function GalleryModal({
       onClick={onClose}
     >
       <div
-        className="relative w-[90vw] h-[85vh] bg-black rounded-lg overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        className="relative w-[90vw] h-[85vh] rounded-lg overflow-hidden bg-transparent"
+        onClick={e => e.stopPropagation()}
       >
         <button
           onClick={onClose}
@@ -77,8 +97,7 @@ function GalleryModal({
         >
           ✕
         </button>
-
-        <ZoomImage src={src} alt="Gallery zoom" zoomScale={3.5} />
+        <HoverZoomImage src={src} alt="Gallery zoom" zoomScale={3} />
       </div>
     </div>
   );
@@ -171,13 +190,17 @@ export default function ProductDetail() {
     <section className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
         {/* MAIN IMAGE */}
-        <div className="flex-1 rounded-lg overflow-hidden shadow-lg">
-          {product.image && (
-            <ZoomImage
+        <div className="flex-1 rounded-lg overflow-hidden shadow-lg min-h-[320px] max-h-[560px] flex items-center justify-center">
+          {product.image ? (
+            <HoverZoomImage
               src={urlFor(product.image).width(1400).url()}
               alt={product.title}
-              zoomScale={3}
+              zoomScale={3}  // Try 4 for even more zoom
             />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
+              No image available
+            </div>
           )}
         </div>
 
