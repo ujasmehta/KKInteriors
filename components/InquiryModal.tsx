@@ -1,5 +1,13 @@
 "use client";
 
+// global.d.ts
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createClient } from "@supabase/supabase-js";
