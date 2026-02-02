@@ -1,0 +1,8 @@
+- [x] Update ProductMasonry.tsx to use CSS Grid with 3 rows instead of columns layout
+- [x] Set overflow-y to hidden to prevent vertical scrolling
+- [x] Ensure horizontal scrolling remains
+- [x] Update to 2 rows
+- [x] Make images a little bigger (250px)
+- [x] Adjust height to limit above green footer line
+- [x] Remove box from images (remove rounded corners and shadows)
+- [x] Remove hover zoom out box (remove box shadows on hover)

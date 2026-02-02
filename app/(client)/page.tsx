@@ -12,21 +12,18 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="h-screen w-full bg-white font-['Inter'] text-gray-800 overflow-hidden flex flex-col">
-      
-    
-      <div className="overflow-hidden flex-shrink-0 h-[calc(100vh-160px)]">
+    <div className="h-screen w-full bg-white font-['Inter'] text-gray-800 overflow-hidden">
+      <div className="h-screen overflow-hidden">
         <ProductMasonry />
       </div>
 
-     <div className="w-full  bg-[#2F6B54] px-4 py-1 text-center">
-  <span className="text-white text-sm tracking-wide">
-    © {new Date().getFullYear()} KK Interiors. All rights reserved.
-  </span>
-</div>
-
+      <div className="fixed bottom-0 left-0 right-0 w-full bg-[#2F6B54] px-4 py-1 text-center z-10">
+        <span className="text-white text-sm tracking-wide">
+          © {new Date().getFullYear()} KK Interiors. All rights reserved.
+        </span>
+      </div>
     </div>
   );
 };
 
-export default Page;
+export default Page; 
