@@ -80,7 +80,7 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
   const HEADER_HEIGHT = 72;
   const GREEN_LINE_HEIGHT = 4;
   const GALLERY_BOTTOM_PADDING = 16;
-  const HOVER_SCALE_EXTRA = 28; // px (adjust for scale and shadow)
+  const HOVER_SCALE_EXTRA = 40; // increase a bit since more rows will be scaled
   const GRID_HEIGHT = `calc(100vh - ${HEADER_HEIGHT + GREEN_LINE_HEIGHT + GALLERY_BOTTOM_PADDING + HOVER_SCALE_EXTRA}px)`;
 
   return (
@@ -96,9 +96,9 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
             <div
               className="
                 grid
-                grid-rows-2
+                grid-rows-4
                 grid-flow-col
-                auto-cols-[minmax(0,_10rem)]
+                auto-cols-[minmax(0,_7rem)]    // smaller item for 4 rows to fit
                 gap-0
                 w-full
               "
