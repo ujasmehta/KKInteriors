@@ -6,8 +6,8 @@ import { sanityClient, urlFor } from "@/lib/sanity";
 import InquiryModal from "@/components/InquiryModal";
 import { PortableText } from "@portabletext/react";
 
-/* ----------- HOVER-TO-ZOOM IMAGE COMPONENT ----------- */
-function HoverZoomImage({
+/* ----------- UNIVERSAL CLICK/TOUCH-ZOOM AND PAN COMPONENT ----------- */
+function ClickPanZoomImage({
   src,
   alt,
   zoomScale = 3,
@@ -17,56 +17,185 @@ function HoverZoomImage({
   zoomScale?: number;
 }) {
   const [zoomed, setZoomed] = useState(false);
-  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const [pan, setPan] = useState({ x: 0, y: 0 }); // px
+  const [containerSize, setContainerSize] = useState({ width: 1, height: 1 });
+  const [imgSize, setImgSize] = useState({ width: 1, height: 1 });
+  const dragStart = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  // Mouse cursor: move zoom focus point
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (!zoomed) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setPosition({ x, y });
-  }
-
-  // On touch/click outside mobile zoom, close
+  // Set container/image sizes
   useEffect(() => {
-    function handleTouch(event: TouchEvent) {
-      if (!containerRef.current) return;
-      if (!containerRef.current.contains(event.target as Node)) {
-        setZoomed(false);
+    function updateSizes() {
+      if (containerRef.current && imgRef.current) {
+        setContainerSize({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight,
+        });
+        setImgSize({
+          width: imgRef.current.offsetWidth,
+          height: imgRef.current.offsetHeight,
+        });
       }
     }
-    if (zoomed) {
-      document.addEventListener("touchstart", handleTouch);
+    updateSizes();
+    window.addEventListener("resize", updateSizes);
+    return () => window.removeEventListener("resize", updateSizes);
+  }, []);
+
+  // Clamp pan so you can't scroll outside the image
+  function clampPan(x: number, y: number) {
+    const w = imgSize.width * zoomScale;
+    const h = imgSize.height * zoomScale;
+    const cw = containerSize.width;
+    const ch = containerSize.height;
+    // Only allow panning so the empty space is never visible
+    const maxPanX = Math.max(0, (w - cw) / 2);
+    const maxPanY = Math.max(0, (h - ch) / 2);
+    return {
+      x: Math.min(maxPanX, Math.max(-maxPanX, x)),
+      y: Math.min(maxPanY, Math.max(-maxPanY, y)),
+    };
+  }
+
+  // On click/tap: zoom in/out and center on click
+  function handleClick(e: React.MouseEvent | React.TouchEvent) {
+    if (!zoomed) {
+      // Get click/tap point relative to image center to center zoom there
+      let clientX = 0;
+      let clientY = 0;
+      if ("touches" in e && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if ("clientX" in e) {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect && imgRef.current) {
+        const imgW = imgRef.current.offsetWidth;
+        const imgH = imgRef.current.offsetHeight;
+        const offsetX = clientX - rect.left - imgW / 2;
+        const offsetY = clientY - rect.top - imgH / 2;
+        // Inverse zoom for pan so the clicked point stays at center
+        setPan(clampPan(-offsetX * (zoomScale - 1), -offsetY * (zoomScale - 1)));
+      } else {
+        setPan({ x: 0, y: 0 });
+      }
+      setZoomed(true);
+    } else {
+      setZoomed(false);
+      setPan({ x: 0, y: 0 });
     }
+  }
+
+  // Mouse drag to pan
+  function handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
+    if (!zoomed) return;
+    dragStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  }
+  function handleMouseMove(e: MouseEvent) {
+    if (!dragStart.current) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    const { panX, panY } = dragStart.current;
+    setPan(clampPan(panX + dx, panY + dy));
+  }
+  function handleMouseUp() {
+    dragStart.current = null;
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
+  }
+
+  // Touch drag to pan
+  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    if (!zoomed) return;
+    const t = e.touches[0];
+    dragStart.current = { x: t.clientX, y: t.clientY, panX: pan.x, panY: pan.y };
+  }
+  function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+    if (!zoomed || !dragStart.current) return;
+    const t = e.touches[0];
+    const dx = t.clientX - dragStart.current.x;
+    const dy = t.clientY - dragStart.current.y;
+    const { panX, panY } = dragStart.current; // SAFE destructure
+    setPan(clampPan(panX + dx, panY + dy));
+  }
+  function handleTouchEnd() {
+    dragStart.current = null;
+  }
+
+  // Wheel scroll for panning (desktop)
+  function handleWheel(e: React.WheelEvent) {
+    if (!zoomed) return;
+    e.preventDefault();
+    setPan(p => clampPan(p.x - e.deltaX, p.y - e.deltaY));
+  }
+
+  // Zoom out (mobile: tap outside, desktop: click outside)
+  useEffect(() => {
+    if (!zoomed) return;
+    function handleOutside(e: MouseEvent | TouchEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as any)
+      ) {
+        setZoomed(false);
+        setPan({ x: 0, y: 0 });
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener("touchstart", handleOutside);
     return () => {
-      document.removeEventListener("touchstart", handleTouch);
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("touchstart", handleOutside);
     };
   }, [zoomed]);
+
+  // Show grab or zoom cursor
+  const cursorStyle =
+    zoomed && !dragStart.current
+      ? "grab"
+      : zoomed && dragStart.current
+      ? "grabbing"
+      : "zoom-in";
 
   return (
     <div
       ref={containerRef}
-      className="w-full h-full relative overflow-hidden cursor-zoom-in select-none"
-      style={{ minHeight: 320, maxHeight: 560 }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setZoomed(true)}
-      onMouseLeave={() => setZoomed(false)}
-      onClick={() => setZoomed(z => !z)} // tap toggles on mobile/touch
+      className="w-full h-full relative overflow-hidden select-none"
+      style={{ minHeight: 320, maxHeight: 560, touchAction: "none", cursor: cursorStyle }}
+      onClick={handleClick}
+      onDoubleClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onTouchStart={e => {
+        if (e.touches.length === 1) {
+          if (!zoomed) handleClick(e);
+          else handleTouchStart(e);
+        }
+      }}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onWheel={handleWheel}
+      tabIndex={0}
     >
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         draggable={false}
         className="w-full h-full object-contain transition-transform duration-200 ease-out"
         style={{
-          transformOrigin: `${position.x}% ${position.y}%`,
-          transform: zoomed ? `scale(${zoomScale})` : "scale(1)",
-          cursor: zoomed ? "zoom-out" : "zoom-in",
-          touchAction: "none",
+          transform: zoomed
+            ? `scale(${zoomScale}) translate(${pan.x / zoomScale}px, ${pan.y / zoomScale}px)`
+            : "scale(1) translate(0,0)",
           userSelect: "none",
           background: "transparent",
+          cursor: cursorStyle,
+          touchAction: "none",
         }}
       />
     </div>
@@ -74,7 +203,6 @@ function HoverZoomImage({
 }
 
 /* ---------------- GALLERY MODAL ---------------- */
-
 function GalleryModal({
   src,
   onClose,
@@ -97,14 +225,13 @@ function GalleryModal({
         >
           ✕
         </button>
-        <HoverZoomImage src={src} alt="Gallery zoom" zoomScale={3} />
+        <ClickPanZoomImage src={src} alt="Gallery zoom" zoomScale={3} />
       </div>
     </div>
   );
 }
 
 /* ---------------- TYPES ---------------- */
-
 interface Piece {
   _id: string;
   title: string;
@@ -118,7 +245,6 @@ interface Piece {
 }
 
 /* ---------------- PAGE ---------------- */
-
 export default function ProductDetail() {
   const params = useParams();
   const slug = params?.slug as string;
@@ -192,10 +318,10 @@ export default function ProductDetail() {
         {/* MAIN IMAGE */}
         <div className="flex-1 rounded-lg overflow-hidden shadow-lg min-h-[320px] max-h-[560px] flex items-center justify-center">
           {product.image ? (
-            <HoverZoomImage
+            <ClickPanZoomImage
               src={urlFor(product.image).width(1400).url()}
               alt={product.title}
-              zoomScale={3}  // Try 4 for even more zoom
+              zoomScale={3}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
