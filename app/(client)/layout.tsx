@@ -14,7 +14,7 @@ const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   title: "Kaashthkala",
-  description: "Elegant, timeless furniture collections by KK Interiors.",
+  description: "Elegant, timeless furniture collections by Kaashthkala.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
