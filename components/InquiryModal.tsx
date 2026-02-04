@@ -30,8 +30,8 @@ export default function InquiryDrawer({
     setLoading(true);
     try {
       await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_njfihvu",
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_qw0etep",
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_0bm9qem",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_7kso1mm",
         {
           from_name: data.name,
           from_email: data.email,
@@ -39,7 +39,7 @@ export default function InquiryDrawer({
           product_name: data.product_name,
           message: data.message,
         },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "bUInX_lQLBGG-5Q8F"
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "kmi7GJxG1sMnsRI26"
       );
 
       toast.success("Inquiry submitted successfully!");
