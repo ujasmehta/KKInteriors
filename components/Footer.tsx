@@ -69,7 +69,7 @@ const Footer = () => {
       <div className="w-full border-t border-[#d18a42]/40">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            {year && <>© {year} KK Interiors</>}
+            {year && <>© {year} Kaashthkala </>}
           </p>
 
           <div className="flex gap-4 text-xs">
