@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
 import { X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
 
 const Sidebar = ({
@@ -13,6 +15,7 @@ const Sidebar = ({
   const ref = useOutsideClick<HTMLDivElement>(() => {
     if (isOpen) onClose();
   });
+  const pathname = usePathname();
 
   useEffect(() => {
     if (isOpen) {
@@ -25,15 +28,22 @@ const Sidebar = ({
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen) onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   return (
     <div
       className={`fixed inset-0 z-50 transition-all duration-300 ease-in-out ${
-        isOpen ? "visible" : "invisible"
+        isOpen ? "visible pointer-events-auto" : "invisible pointer-events-none"
       }`}
     >
       <div
         className={`absolute inset-0 bg-black/30 transition-opacity ${
-          isOpen ? "opacity-100" : "opacity-0"
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       ></div>
 
@@ -50,18 +60,18 @@ const Sidebar = ({
         </button>
 
         <div className="flex flex-col items-start mt-16 px-6 space-y-6 text-sm font-medium">
-          <a href="/" className="text-black hover:text-[#d18a42]">
+          <Link href="/" className="text-black hover:text-[#d18a42]">
             Home
-          </a>
-          <a href="/product" className="text-black hover:text-[#d18a42]">
+          </Link>
+          <Link href="/product" className="text-black hover:text-[#d18a42]">
             Products
-          </a>
-          <a href="/about" className="text-black hover:text-[#d18a42]">
+          </Link>
+          <Link href="/about" className="text-black hover:text-[#d18a42]">
             About Us
-          </a>
-          <a href="/contact" className="text-black hover:text-[#d18a42]">
+          </Link>
+          <Link href="/contact" className="text-black hover:text-[#d18a42]">
             Contact Us
-          </a>
+          </Link>
         </div>
       </div>
     </div>

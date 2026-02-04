@@ -31,7 +31,6 @@ const Header = () => {
     <header className="w-full bg-white sticky top-0 z-50 relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
@@ -78,14 +77,6 @@ const Header = () => {
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-lg border-t lg:hidden">
           <div className="flex flex-col items-center gap-6 py-8 text-base uppercase">
-            <Link
-              href="/catalogue"
-              onClick={() => setMenuOpen(false)}
-              className="px-8 py-3 rounded-full bg-[#2F6B54] text-white"
-            >
-              Explore
-            </Link>
-
             {navItems.map((item) => (
               <Link
                 key={item.href}
