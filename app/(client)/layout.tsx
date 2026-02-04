@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
-  title: "KK Interiors",
+  title: "Kaashthkala",
   description: "Elegant, timeless furniture collections by KK Interiors.",
 };
 
