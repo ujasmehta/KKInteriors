@@ -33,7 +33,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="w-full bg-white sticky top-0 z-50 relative">
+    <header className="w-full bg-white sticky top-0 z-[1000] relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -80,7 +80,7 @@ const Header = () => {
 
       {/* 🔽 Dropdown Menu (NOT fullscreen) */}
       {menuOpen && (
-        <div className="absolute top-full left-0 w-full bg-white shadow-lg border-t lg:hidden z-50">
+        <div className="fixed top-16 left-0 w-full bg-white shadow-lg border-t lg:hidden z-[2000]">
           <div className="flex flex-col items-center gap-6 py-8 text-base uppercase">
             {navItems.map((item) => (
               <Link

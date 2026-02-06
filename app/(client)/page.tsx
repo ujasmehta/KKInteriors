@@ -17,7 +17,7 @@ const Page = () => {
         <ProductMasonry />
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 w-full bg-[#2F6B54] px-4 py-1 text-center z-10">
+      <div className="fixed bottom-0 left-0 right-0 w-full bg-[#2F6B54] px-4 py-1 text-center z-[1000]">
         <span className="text-white text-sm tracking-wide">
           © {new Date().getFullYear()} Kaashthkala. All rights reserved.
         </span>
