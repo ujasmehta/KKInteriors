@@ -12,77 +12,55 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="w-full bg-white pt-12">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="h-px w-full bg-[#2F6B54]" />
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 pt-12 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+    <footer className="w-full bg-white border-t border-gray-200 mt-16">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div>
-            <h3 className="text-xl font-semibold text-gray-800">
-              Sign up for our newsletter
+            <h2 className="text-lg font-semibold text-[#2F6B54]">
+              KK Interiors
+            </h2>
+            <p className="mt-3 text-sm text-gray-600 max-w-sm">
+              Creating elegant and timeless interiors with quality craftsmanship
+              and thoughtful design.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold uppercase text-gray-700">
+              Newsletter
             </h3>
-            <p className="mt-2 text-xs text-gray-600 max-w-xs">
-              Be the first to hear about our special offers, news, and launches.
+            <p className="mt-3 text-sm text-gray-600">
+              Subscribe to receive updates and special offers.
             </p>
 
-            <form className="mt-6 flex border border-[#d18a42]/40 rounded-full p-1 max-w-xs">
+            <form className="mt-4 flex max-w-sm">
               <Input
                 type="email"
-                placeholder="Email address"
-                className="flex-grow border-none focus-visible:ring-0 text-sm h-10"
+                placeholder="Enter your email"
+                className="rounded-r-none h-10"
               />
               <Button
                 type="submit"
-                className="h-10 px-5 rounded-full bg-[#2F6B54] text-white text-sm hover:bg-[#144130] transition-all"
+                className="rounded-l-none h-10 text-white bg-[#2F6B54] hover:bg-[#1f4d3a] cursor-pointer"
               >
-                Sign up
+                Subscribe
               </Button>
             </form>
-          </div>
-
-          <div className="lg:col-span-3 grid grid-cols-3 gap-8">
-            {["Column", "Column", "Column"].map((title, idx) => (
-              <div key={idx}>
-                <h4 className="text-sm font-semibold uppercase text-gray-700">
-                  {title}
-                </h4>
-                <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                  {["Lorem", "Ipsum", "Dolor", "Sit"].map((item) => (
-                    <li key={item}>
-                      <a
-                        href="#"
-                        className="hover:text-[#123527] transition-colors"
-                      >
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
           </div>
         </div>
       </div>
 
-      <div className="w-full border-t border-[#d18a42]/40">
+      <div className="border-t border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500">
-            {year && <>© {year} Kaashthkala </>}
+          <p className="text-sm text-gray-500">
+            {year && <>© {year} KK Interiors. All rights reserved.</>}
           </p>
 
-          <div className="flex gap-4 text-xs">
-            <a
-              href="#privacy"
-              className="text-gray-500 hover:text-[#d18a42] transition-colors"
-            >
+          <div className="flex gap-6 text-sm text-gray-500">
+            <a href="#privacy" className="hover:text-[#2F6B54]">
               Privacy Policy
             </a>
-            <a
-              href="#terms"
-              className="text-gray-500 hover:text-[#d18a42] transition-colors"
-            >
+            <a href="#terms" className="hover:text-[#2F6B54]">
               Terms of Service
             </a>
           </div>
