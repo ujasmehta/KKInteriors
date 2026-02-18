@@ -59,6 +59,7 @@ const Header = () => {
         </div>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm uppercase">
+          
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -73,6 +74,23 @@ const Header = () => {
             <SignInButton>
               <button className="hover:text-[#1b4937] uppercase">Login</button>
             </SignInButton>
+            <a
+  href="https://www.instagram.com/kaashthkala?igsh=eXR3dzVodG14c3c0"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-[#1b4937] transition-colors"
+  aria-label="Instagram"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5A3.75 3.75 0 0 1 16.25 20h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm4.25 3.5A4.75 4.75 0 1 0 16.75 12 4.756 4.756 0 0 0 12 7.5zm0 2A2.75 2.75 0 1 1 9.25 12 2.753 2.753 0 0 1 12 9.5zm5.5-.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z" />
+  </svg>
+</a>
+
           </SignedOut>
 
           <SignedIn>
@@ -142,6 +160,24 @@ const Header = () => {
             <SignInButton>
               <button className="hover:text-[#1b4937] uppercase">Login</button>
             </SignInButton>
+            <a
+  href="https://www.instagram.com/kaashthkala?igsh=eXR3dzVodG14c3c0"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={() => setMenuOpen(false)}
+  className="hover:text-[#1b4937] transition-colors"
+  aria-label="Instagram"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-6 h-6"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5A3.75 3.75 0 0 1 16.25 20h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4zm4.25 3.5A4.75 4.75 0 1 0 16.75 12 4.756 4.756 0 0 0 12 7.5zm0 2A2.75 2.75 0 1 1 9.25 12 2.753 2.753 0 0 1 12 9.5zm5.5-.75a1 1 0 1 1-1-1 1 1 0 0 1 1 1z" />
+  </svg>
+</a>
+
           </SignedOut>
 
           <SignedIn>
