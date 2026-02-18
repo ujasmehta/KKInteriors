@@ -1,7 +1,7 @@
+export const runtime = "nodejs";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import nodemailer from "nodemailer";
-
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,24 +10,26 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, message, product } = await req.json();
+    // Accept both product_id and product_name
+    const { name, email, message, phone, product_id, product_name } = await req.json();
 
-    if (!name || !email || !message || !product) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    if (!name || !email || !message) {
+      return NextResponse.json({ error: "Name, Email and Message are required." }, { status: 400 });
     }
 
-  
+    // Insert all possible fields
     const { error: supabaseError } = await supabase.from("inquiry").insert({
       name,
       email,
+      phone: phone || null,
       message,
-      product,
+      product_id: product_id ?? null,
+      product_name: product_name ?? null,
       created_at: new Date(),
     });
 
     if (supabaseError) throw new Error(supabaseError.message);
 
-    
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -39,7 +41,11 @@ export async function POST(req: NextRequest) {
     const htmlMessage = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <h2 style="color: #2c3e50;">Hello ${name},</h2>
-        <p>Thank you for reaching out regarding <strong>${product}</strong>.</p>
+        <p>
+          Thank you for reaching out
+          ${product_id ? ` regarding Product ID: ${product_id}` : ""}
+          ${product_name ? ` regarding "${product_name}"` : ""}
+        </p>
         <p>We have received your message and our team will review it shortly:</p>
         <blockquote style="background: #f9f9f9; border-left: 4px solid #f39c12; padding: 10px; margin: 15px 0;">
           ${message}
@@ -53,13 +59,16 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: `Your Inquiry About "${product}"`,
+      subject:
+        (product_id ? `Your Inquiry About Product ID ${product_id}` : "") +
+        (product_name ? `Your Inquiry About "${product_name}"` : "") ||
+        "Your Inquiry",
       html: htmlMessage,
     });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("Inquiry API error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Inquiry API error:", error?.message || error);
+    return NextResponse.json({ error: error?.message || "Unexpected error." }, { status: 500 });
   }
 }

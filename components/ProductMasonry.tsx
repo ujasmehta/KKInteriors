@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import ProductCard from "./ProductCard";
 import { motion, Variants } from "framer-motion";
 
 type GalleryItem = {
   id: string;
+  slug?: string;
   title: string;
   description?: string;
   images: string[];
@@ -31,13 +31,12 @@ const itemVariants: Variants = {
 
 export default function ProductMasonry({ limit }: { limit?: number }) {
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [hovered, setHovered] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<{ animationFrame?: number }>({});
 
-  // Fetch gallery
   useEffect(() => {
     let mounted = true;
-
     fetch("/api/gallery")
       .then((r) => r.json())
       .then((data: GalleryItem[]) => {
@@ -45,105 +44,122 @@ export default function ProductMasonry({ limit }: { limit?: number }) {
         setItems(limit ? data.slice(0, limit) : data);
       })
       .catch(() => setItems([]));
-
     return () => {
       mounted = false;
     };
   }, [limit]);
 
-  // Mouse edge scroll
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     let mouseX = -1;
-
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
     };
-
     const handleMouseLeave = () => {
       mouseX = -1;
     };
-
     const scroll = () => {
       if (mouseX >= 0) {
         const rect = container.getBoundingClientRect();
         const edgeSize = 150;
-
-        if (mouseX > rect.right - edgeSize) {
-          container.scrollLeft +=
-            ((mouseX - (rect.right - edgeSize)) / edgeSize) * 15;
-        } else if (mouseX < rect.left + edgeSize) {
-          container.scrollLeft -=
-            ((rect.left + edgeSize - mouseX) / edgeSize) * 15;
-        }
+        let speed = 0;
+        if (mouseX > rect.right - edgeSize)
+          ((speed = ((mouseX - (rect.right - edgeSize)) / edgeSize) * 15),
+            (container.scrollLeft += speed));
+        else if (mouseX < rect.left + edgeSize)
+          ((speed = ((rect.left + edgeSize - mouseX) / edgeSize) * 15),
+            (container.scrollLeft -= speed));
       }
-
       scrollRef.current.animationFrame = requestAnimationFrame(scroll);
     };
-
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
     scrollRef.current.animationFrame = requestAnimationFrame(scroll);
-
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      if (scrollRef.current.animationFrame) {
+      if (scrollRef.current.animationFrame)
         cancelAnimationFrame(scrollRef.current.animationFrame);
-      }
     };
   }, []);
 
-  const gap = 0;
+  const HEADER_HEIGHT = 72;
+  const GREEN_LINE_HEIGHT = 4;
+  const GALLERY_BOTTOM_PADDING = 16;
+  const HOVER_SCALE_EXTRA = 40; // increase a bit since more rows will be scaled
+  const GRID_HEIGHT = `calc(100vh - ${HEADER_HEIGHT + GREEN_LINE_HEIGHT + GALLERY_BOTTOM_PADDING + HOVER_SCALE_EXTRA}px)`;
 
   return (
-    <section
-      ref={containerRef}
-      className="w-full overflow-x-auto no-scrollbar"
-    >
-      <div className="min-w-max">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <div
-            className="columns-4 sm:columns-6 md:columns-8 lg:columns-10 xl:columns-12"
-            style={{
-              columnGap: gap,
-              perspective: 1200,
-              width: "100%",
-              maxHeight: "calc(3 * 250px)",
-            }}
+    <div className="relative h-screen w-full overflow-hidden bg-white font-['Inter'] text-gray-800">
+      {/* Masonry Gallery */}
+      <section
+        className="w-full overflow-x-auto no-scrollbar overflow-y-visible"
+        ref={containerRef}
+        style={{
+          paddingBottom:
+            GALLERY_BOTTOM_PADDING + GREEN_LINE_HEIGHT + HOVER_SCALE_EXTRA,
+        }}
+      >
+        <div className="min-w-max py-4">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
           >
-            {items.map((item) => (
-              <motion.div
-                key={item.id}
-                variants={itemVariants}
-                layout
-                whileHover={{
-                  scale: 1.16,
-                  boxShadow: "0 12px 30px rgba(16,24,40,0.10)",
-                }}
-                transition={{ type: "spring", stiffness: 280, damping: 24 }}
-                className="group"
-                style={{
-                  breakInside: "avoid",
-                  marginBottom: gap,
-                }}
-              >
-                <ProductCard
-                  title={item.title}
-                  image={item.images[0]}
-                  description={item.description}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+            <div
+              className="grid grid-rows-4 grid-flow-col auto-cols-[minmax(0,_7rem)] gap-0 w-full"
+              style={{
+                height: GRID_HEIGHT,
+                maxHeight: GRID_HEIGHT,
+                minHeight: GRID_HEIGHT,
+                overflow: "visible",
+              }}
+            >
+              {items.map((item) => (
+                <motion.div
+                  key={item.id}
+                  variants={itemVariants}
+                  layout
+                  onMouseEnter={() => setHovered(item.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  whileHover={{
+                    // stronger container scale for emphasis; keep motion smooth
+                    scale: 1.12,
+                    zIndex: 920,
+                    boxShadow: "0 22px 48px rgba(16,24,40,0.14)",
+                    transition: { duration: 0.6, ease: "easeOut" },
+                  }}
+                  transition={{ type: "spring", stiffness: 160, damping: 20 }}
+                  className="group relative flex items-stretch justify-stretch aspect-square w-full h-full"
+                  style={{
+                    zIndex: hovered === item.id ? 920 : 800,
+                    transformOrigin: "center center",
+                    willChange: "transform",
+                  }}
+                >
+                  <img
+                    src={(item.images && item.images[0]) || "/placeholder.png"}
+                    alt="Gallery image"
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transform transition-transform duration-500 ease-out group-hover:scale-110 block"
+                    style={{
+                      margin: 0,
+                      padding: 0,
+                      display: "block",
+                      transformOrigin: "center center",
+                      willChange: "transform",
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      {/* Fixed thin green line footer - 1/3 width, centered. z-[1000]: always above gallery */}
+      <div className="fixed left-0 right-0 bottom-0 flex justify-center pointer-events-none z-[1000]">
+        <div className="bg-[#2F6B54] h-1 w-1/3 rounded"></div>
       </div>
-    </section>
+    </div>
   );
 }

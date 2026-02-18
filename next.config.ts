@@ -6,7 +6,17 @@ const nextConfig: NextConfig = {
     optimizeCss: false,
   },
   images: {
-    domains: ["images.unsplash.com", "cdn.sanity.io"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images. unsplash.com',
+      },
+      {
+        protocol:  'https',
+        hostname: 'cdn.sanity.io',
+      },
+    ],
+    //unoptimized: true, // This disables Next.js image optimization
   },
 };
 

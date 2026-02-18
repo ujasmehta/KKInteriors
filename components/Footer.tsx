@@ -29,13 +29,10 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Newsletter */}
-        <div>
-          <h3 className="text-sm font-semibold uppercase text-gray-700">
-            Newsletter
-          </h3>
-          <p className="mt-3 text-sm text-gray-600">
-            Subscribe to receive updates and special offers.
+      <div className="w-full border-t border-[#d18a42]/40">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-gray-500">
+            {year && <>© {year} Kaashthkala </>}
           </p>
 
           <form className="mt-4 flex max-w-sm">

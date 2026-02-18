@@ -26,9 +26,8 @@ const CatalogueProductCard: React.FC<ProductCardProps> = ({
       className="w-full mb-0 block rounded-lg overflow-hidden bg-white shadow-md border border-gray-200"
       style={{ breakInside: "avoid" } as React.CSSProperties}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      role="button"
-      tabIndex={0}
     >
+      {/* Image */}
       <div className="relative overflow-hidden">
         <motion.img
           src={image}
@@ -46,8 +45,11 @@ const CatalogueProductCard: React.FC<ProductCardProps> = ({
         )}
       </div>
 
+      {/* Content */}
       <div className="p-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">{title}</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">
+          {title}
+        </h2>
 
         {description && (
           <p className="text-gray-600 text-sm mb-2 line-clamp-3">
@@ -56,7 +58,9 @@ const CatalogueProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {price !== undefined && (
-          <p className="text-[#d18a42] font-bold text-md mb-2">₹{price}</p>
+          <p className="text-[#d18a42] font-bold text-md mb-2">
+            ₹{price}
+          </p>
         )}
 
         {collection && (
